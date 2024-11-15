@@ -1,30 +1,44 @@
 const express = require('express');
+const path = require('path');
+var cors = require('cors');
+var bodyParser = require('body-parser');
+const mysql = require('mysql2');
+
 const app = express();
 const port = 3000;
 
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const mysql = require('mysql2');
+app.use(cors());
+app.use(bodyParser.json()); // for parsing application/json
+
+// Update the static file path to serve images from client/public/images
+app.use('/images', express.static(path.join(__dirname, '../client/public/images')));
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+    res.send('Hello World!');
 });
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:${port}`);
 });
 
-app.use(cors());
-app.use(bodyParser.json());
-
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'todolist'
+    user: 'root2',
+    socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
+    database: 'frencheez',
 });
 
 db.connect((err) => {
-  if (err) throw err;
-  console.log('Connected to database');
+    if (err) throw err;
+    console.log('Connected to database');
+});
+
+app.get('/api/cheeses', (req, res) => {
+    const sql = 'SELECT * FROM CheeseInfo';
+    db.query(sql, (err, results) => {
+        if (err) {
+            res.status(500).send('Error retrieving cheeses from database');
+            throw err;
+        }
+        res.json(results);
+    });
 });
