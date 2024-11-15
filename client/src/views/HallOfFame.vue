@@ -1,56 +1,174 @@
 <template>
-  <div class="hall-of-fame">
-    <div class="title-container">
-      <h1>À la carte</h1>
+    <div class="hall-of-fame" @click="closeFilterModal">
+      <div class="title-container">
+        <h1>À la carte</h1>
+      </div>
+      <div class="search-container">
+        <input type="text" placeholder="Search..." v-model="searchQuery" />
+        <img src="@/assets/filter-icon.png" alt="Filter Icon" class="filter-icon" @click.stop="toggleFilterModal" />
+      </div>
+      
+      <!-- Filter Modal -->
+      <div v-if="showFilterModal" class="filter-modal" @click.stop>
+        <h2>Filter Options</h2>
+        <label>
+          Alphabetical Order
+          <select v-model="filters.alphabetical">
+            <option value="asc">A-Z</option>
+            <option value="desc">Z-A</option>
+          </select>
+        </label>
+        <label>
+          Region
+          <select v-model="filters.region">
+            <option value="">All</option>
+            <option v-for="region in uniqueRegions" :key="region" :value="region">{{ region }}</option>
+          </select>
+        </label>
+        <label>
+          Type
+          <select v-model="filters.type">
+            <option value="">All</option>
+            <option v-for="type in uniqueTypes" :key="type" :value="type">{{ type }}</option>
+          </select>
+        </label>
+        <label>
+          Aging Period
+          <input
+            type="range"
+            :min="minAgingPeriod"
+            :max="maxAgingPeriod"
+            v-model="filters.agingPeriod"
+          />
+          <span>{{ filters.agingPeriod }} months</span>
+        </label>
+        <label>
+          Flavor
+          <input type="text" v-model="filters.flavor" placeholder="Flavor profile" />
+        </label>
+        <label>
+          Texture
+          <input type="text" v-model="filters.texture" placeholder="Texture" />
+        </label>
+        <div class="button-container">
+          <button @click="applyFilters">Apply Filters</button>
+          <button @click="resetFilters">Reset Filters</button>
+        </div>
+      </div>
+  
+      <!-- Cheese Grid -->
+      <div class="cheese-grid">
+        <router-link
+          v-for="cheese in filteredCheeses"
+          :key="cheese.id"
+          :to="{ name: 'CheeseInfo', params: { id: cheese.id } }"
+          class="cheese-card"
+        >
+          <img :src="`http://localhost:3000${cheese.image_path}`" class="cheese-image" :alt="cheese.name" />
+          <span class="cheese-name">{{ cheese.name }}</span>
+          <span class="favorite-icon">★</span>
+        </router-link>
+      </div>
     </div>
-    <div class="search-container">
-      <input type="text" placeholder="Search..." v-model="searchQuery" />
-      <img src="@/assets/filter-icon.png" alt="Filter Icon" class="filter-icon" />
-    </div>
-    <div class="cheese-grid">
-      <!-- Wrap each cheese card in a router-link -->
-      <router-link
-        v-for="cheese in filteredCheeses"
-        :key="cheese.id"
-        :to="{ name: 'CheeseInfo', params: { id: cheese.id } }"
-        class="cheese-card"
-      >
-        <img :src="`http://localhost:3000${cheese.image_path}`" class="cheese-image" :alt="cheese.name" />
-        <span class="cheese-name">{{ cheese.name }}</span>
-        <span class="favorite-icon">★</span>
-      </router-link>
-    </div>
-  </div>
-</template>
-
-<script>
-import axios from 'axios';
-
-export default {
-  data() {
-    return {
-      cheeses: [],
-      searchQuery: '',
-    };
-  },
-  computed: {
-    filteredCheeses() {
-      return this.cheeses.filter(cheese =>
-        cheese.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  
+  export default {
+    data() {
+      return {
+        cheeses: [],
+        searchQuery: '',
+        showFilterModal: false,
+        filters: {
+          alphabetical: 'asc',
+          region: '',
+          type: '',
+          agingPeriod: 24,  // Default value
+          flavor: '',
+          texture: ''
+        }
+      };
+    },
+    computed: {
+      uniqueRegions() {
+        return [...new Set(this.cheeses.map(cheese => cheese.region))];
+      },
+      uniqueTypes() {
+        return [...new Set(this.cheeses.map(cheese => cheese.type))];
+      },
+      minAgingPeriod() {
+        return Math.min(...this.cheeses.map(cheese => parseInt(cheese.aging_period))) || 0;
+      },
+      maxAgingPeriod() {
+        return Math.max(...this.cheeses.map(cheese => parseInt(cheese.aging_period))) || 24;
+      },
+      filteredCheeses() {
+        let result = this.cheeses;
+  
+        if (this.filters.region) {
+          result = result.filter(cheese => cheese.region === this.filters.region);
+        }
+        if (this.filters.type) {
+          result = result.filter(cheese => cheese.type === this.filters.type);
+        }
+        if (this.filters.agingPeriod < this.maxAgingPeriod) {
+          result = result.filter(cheese => parseInt(cheese.aging_period) <= this.filters.agingPeriod);
+        }
+        if (this.filters.flavor) {
+          result = result.filter(cheese => cheese.flavor_profile.toLowerCase().includes(this.filters.flavor.toLowerCase()));
+        }
+        if (this.filters.texture) {
+          result = result.filter(cheese => cheese.texture.toLowerCase().includes(this.filters.texture.toLowerCase()));
+        }
+  
+        result = result.sort((a, b) => {
+          if (this.filters.alphabetical === 'asc') return a.name.localeCompare(b.name);
+          if (this.filters.alphabetical === 'desc') return b.name.localeCompare(a.name);
+          return 0;
+        });
+  
+        return result.filter(cheese =>
+          cheese.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      }
+    },
+    methods: {
+      toggleFilterModal() {
+        this.showFilterModal = !this.showFilterModal;
+      },
+      closeFilterModal(event) {
+        if (this.showFilterModal && !event.target.closest(".filter-modal")) {
+          this.showFilterModal = false;
+        }
+      },
+      applyFilters() {
+        this.showFilterModal = false;
+      },
+      resetFilters() {
+        this.filters = {
+          alphabetical: 'asc',
+          region: '',
+          type: '',
+          agingPeriod: this.maxAgingPeriod,
+          flavor: '',
+          texture: ''
+        };
+      }
+    },
+    created() {
+      axios.get('http://localhost:3000/api/cheeses')
+        .then(response => {
+          this.cheeses = response.data;
+        })
+        .catch(error => {
+          console.error("There was an error fetching the cheeses:", error);
+        });
     }
-  },
-  created() {
-    axios.get('http://localhost:3000/api/cheeses')
-      .then(response => {
-        this.cheeses = response.data;
-      })
-      .catch(error => {
-        console.error("There was an error fetching the cheeses:", error);
-      });
-  }
-};
-</script>
+  };
+  </script>
+
   
   <style scoped>
   .hall-of-fame {
@@ -127,7 +245,6 @@ export default {
 }
 
 
-
 .favorite-icon {
   position: absolute;
   top: 10px;
@@ -171,5 +288,58 @@ export default {
   z-index: 0;
 }
 
+.filter-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 300px;
+  border-radius: 10px;
+  font-family: 'Rubik', sans-serif;
+}
+
+.filter-modal h2 {
+  font-size: 1.5rem;
+  color: #575dce;
+  margin-bottom: 20px;
+}
+
+.filter-modal label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.filter-modal select,
+.filter-modal input[type="range"],
+.filter-modal input[type="text"] {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.button-container button {
+  padding: 10px;
+  background-color: #575dce;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #4646a8;
+}
 
 </style>
