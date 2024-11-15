@@ -44,3 +44,17 @@ app.get('/api/cheeses', (req, res) => {
         res.json(results);
     });
 });
+
+// Get a single cheese by ID
+app.get('/api/cheeses/:id', (req, res) => {
+    const cheeseId = req.params.id;
+    const sql = 'SELECT * FROM CheeseInfo WHERE id = ?';
+    db.query(sql, [cheeseId], (err, result) => {
+      if (err) {
+        res.status(500).send('Error retrieving cheese details');
+        return;
+      }
+      res.json(result[0]);
+    });
+  });
+  

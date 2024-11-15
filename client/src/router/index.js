@@ -7,7 +7,11 @@ const routes = [
     name: 'HallOfFame',
     component: HallOfFame,
   },
-  // Add more routes here as needed
+  {
+    path: '/cheese/:id',
+    name: 'CheeseInfo',
+    component: () => import('@/views/CheeseInfoPage.vue')
+  },
 ];
 
 const router = createRouter({

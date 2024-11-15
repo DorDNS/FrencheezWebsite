@@ -1,50 +1,56 @@
 <template>
-    <div class="hall-of-fame">
-        <div class="title-container">
-            <h1>À la carte</h1>
-        </div>
-        <div class="search-container">
-            <input type="text" placeholder="Search..." v-model="searchQuery" />
-            <img src="@/assets/filter-icon.png" alt="Filter Icon" class="filter-icon" />
-        </div>
-        <div class="cheese-grid">
-            <div v-for="cheese in filteredCheeses" :key="cheese.id" class="cheese-card">
-                <img :src="`http://localhost:3000${cheese.image_path}`" class="cheese-image" :alt="cheese.name" />
-                <span class="cheese-name">{{ cheese.name }}</span>
-                <span class="favorite-icon">★</span>
-            </div>
-        </div>
+  <div class="hall-of-fame">
+    <div class="title-container">
+      <h1>À la carte</h1>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        cheeses: [],
-        searchQuery: '',
-      };
-    },
-    computed: {
-      filteredCheeses() {
-        return this.cheeses.filter(cheese =>
-          cheese.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      }
-    },
-    created() {
-      axios.get('http://localhost:3000/api/cheeses')
-        .then(response => {
-          this.cheeses = response.data;
-        })
-        .catch(error => {
-          console.error("There was an error fetching the cheeses:", error);
-        });
+    <div class="search-container">
+      <input type="text" placeholder="Search..." v-model="searchQuery" />
+      <img src="@/assets/filter-icon.png" alt="Filter Icon" class="filter-icon" />
+    </div>
+    <div class="cheese-grid">
+      <!-- Wrap each cheese card in a router-link -->
+      <router-link
+        v-for="cheese in filteredCheeses"
+        :key="cheese.id"
+        :to="{ name: 'CheeseInfo', params: { id: cheese.id } }"
+        class="cheese-card"
+      >
+        <img :src="`http://localhost:3000${cheese.image_path}`" class="cheese-image" :alt="cheese.name" />
+        <span class="cheese-name">{{ cheese.name }}</span>
+        <span class="favorite-icon">★</span>
+      </router-link>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      cheeses: [],
+      searchQuery: '',
+    };
+  },
+  computed: {
+    filteredCheeses() {
+      return this.cheeses.filter(cheese =>
+        cheese.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     }
-  };
-  </script>
+  },
+  created() {
+    axios.get('http://localhost:3000/api/cheeses')
+      .then(response => {
+        this.cheeses = response.data;
+      })
+      .catch(error => {
+        console.error("There was an error fetching the cheeses:", error);
+      });
+  }
+};
+</script>
   
   <style scoped>
   .hall-of-fame {
@@ -103,16 +109,23 @@
   margin-bottom: 10px;
 }
 
-.cheese-name {
+.cheese-grid .cheese-card .cheese-name {
   font-size: 1.2rem;
   font-weight: bold;
   font-family: 'Rubik', sans-serif;
+  color: black; /* Ensure the text color is black */
   white-space: nowrap; /* Prevents text from wrapping */
   overflow: hidden;
   text-overflow: ellipsis; /* Adds "..." if the name is too long */
   display: block;
   margin-top: 10px;
+  text-decoration: none !important; /* Remove underline */
 }
+
+.cheese-grid .cheese-card {
+  text-decoration: none; /* Ensure the whole link has no underline */
+}
+
 
 
 .favorite-icon {
