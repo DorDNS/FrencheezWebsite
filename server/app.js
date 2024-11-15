@@ -21,6 +21,7 @@ app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
 
+// Connect to the database
 const db = mysql.createConnection({
     user: 'root2',
     socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
@@ -32,6 +33,7 @@ db.connect((err) => {
     console.log('Connected to database');
 });
 
+// Get all cheeses
 app.get('/api/cheeses', (req, res) => {
     const sql = 'SELECT * FROM CheeseInfo';
     db.query(sql, (err, results) => {
