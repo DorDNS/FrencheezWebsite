@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const db = require('./db'); // Make sure this points to the correct database connection
+const db = require('./db'); 
 const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
 
 // Register route

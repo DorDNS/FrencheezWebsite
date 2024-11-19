@@ -3,6 +3,7 @@ import HomePage from '@/views/HomePage.vue';
 import HallOfFame from '@/views/HallOfFame.vue';
 import LoginPage from '@/views/LoginPage.vue';
 import RegisterPage from '@/views/RegisterPage.vue';
+import MyProgress from '@/views/MyProgress.vue'; // Importer la vue MyProgress
 
 const routes = [
     {
@@ -32,6 +33,12 @@ const routes = [
         name: 'Register',
         component: RegisterPage,
     },
+    {
+        path: '/progress',
+        name: 'MyProgress',
+        component: MyProgress,
+        meta: { requiresAuth: true }, // Protect this route
+    },
 ];
 
 const router = createRouter({
@@ -43,10 +50,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('token'); // Check if token exists
 
-  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+  if (!isAuthenticated && to.name !== 'Login' && to.name !== 'Register') {
     next('/login'); // Redirect to login if not authenticated
   } else {
-    next(); // Allow access if authenticated or if the route doesn't require authentication
+    next(); // Allow access if authenticated or if the route is login or register
   }
 });
 
