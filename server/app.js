@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const authRoutes = require('./authRoutes');
 const authMiddleware = require('./authMiddleware'); // Middleware for protecting routes
 const db = require('./db'); // Import the centralized database connection
+const favoriteRoutes = require('./favorites');
+
 
 const app = express();
 const port = 3000;
@@ -18,6 +20,19 @@ app.use('/images', express.static(path.join(__dirname, '../client/public/images'
 
 // Routes for authentication (login, register)
 app.use('/api/auth', authRoutes);
+
+// Routes for favorites
+app.use('/api', favoriteRoutes);
+
+// Simple root route
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
+// Start server
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
 
 // Protected route: Get all cheeses (requires authentication)
 app.get('/api/cheeses', authMiddleware, (req, res) => {
@@ -44,12 +59,3 @@ app.get('/api/cheeses/:id', authMiddleware, (req, res) => {
     });
 });
 
-// Simple root route
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
-// Start server
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
