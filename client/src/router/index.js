@@ -4,6 +4,7 @@ import HallOfFame from '@/views/HallOfFame.vue';
 import LoginPage from '@/views/LoginPage.vue';
 import RegisterPage from '@/views/RegisterPage.vue';
 import MyProgress from '@/views/MyProgress.vue';
+import Quiz from '@/views/QuizPage.vue';
 
 const routes = [
   { 
@@ -33,6 +34,12 @@ const routes = [
     component: MyProgress,
     meta: { requiresAuth: true }, // Restrict access
   },
+  {
+    path: '/quiz',
+    name: 'Quiz',
+    component: Quiz,
+    meta: { requiresAuth: true }, // Restrict access
+  }
 ];
 
 const router = createRouter({
