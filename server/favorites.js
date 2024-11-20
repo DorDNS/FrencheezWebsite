@@ -36,14 +36,28 @@ router.delete('/favorites/:cheeseId', authMiddleware, (req, res) => {
   });
 });
 
-// Fetch user favorites
+// Fetch user favorites with cheese details
 router.get('/favorites', authMiddleware, (req, res) => {
-  const sql = 'SELECT cheese_id FROM UserFavorites WHERE user_id = ?';
+  const sql = `
+  SELECT 
+    UserFavorites.cheese_id, 
+    CheeseInfo.name, 
+    CheeseInfo.image_path
+  FROM 
+    UserFavorites
+  INNER JOIN 
+    CheeseInfo 
+  ON 
+    UserFavorites.cheese_id = CheeseInfo.id
+  WHERE 
+    UserFavorites.user_id = ?
+  `;
   db.query(sql, [req.user.id], (err, results) => {
     if (err) {
       res.status(500).send('Error retrieving favorites');
       return;
     }
+    
     res.json(results);
   });
 });

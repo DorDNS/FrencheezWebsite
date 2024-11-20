@@ -174,11 +174,9 @@ export default {
         if (this.isFavorite(cheeseId)) {
           await axios.delete(`/favorites/${cheeseId}`);
           this.favorites = this.favorites.filter(id => id !== cheeseId);
-          alert("Favorite removed successfully!");
         } else {
           await axios.post("/favorites", { cheeseId });
           this.favorites.push(cheeseId);
-          alert("Favorite added successfully!");
         }
       } catch (error) {
         console.error("Error toggling favorite:", error);
