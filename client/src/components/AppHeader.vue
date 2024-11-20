@@ -44,7 +44,7 @@ export default {
 
 .navigation {
   display: flex;
-  gap: 20px;
+  gap: 30px;
   min-width: 350px; /* Ensures enough space for navigation links */
 }
 
@@ -86,7 +86,7 @@ export default {
 
   .navigation {
     flex-direction: row;
-    gap: 15px;
+    gap: 30px;
     margin: 10px 0;
     justify-content: center; /* Center-aligns the navigation links */
   }

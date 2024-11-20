@@ -120,7 +120,7 @@
     color: #333;
     font-size: 1.2rem;
     padding: 12px;
-    width: 90%; /* Reduced width to avoid overflow */
+    width: 336px;
     border: none;
     border-radius: 20px;
     font-family: 'Rubik', sans-serif;
