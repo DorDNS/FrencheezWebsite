@@ -5,6 +5,7 @@ import LoginPage from '@/views/LoginPage.vue';
 import RegisterPage from '@/views/RegisterPage.vue';
 import MyProgress from '@/views/MyProgress.vue';
 import Quiz from '@/views/QuizPage.vue';
+import CheeseInfoPage from '@/views/CheeseInfoPage.vue';
 
 const routes = [
   { 
@@ -26,6 +27,12 @@ const routes = [
     path: '/hall-of-fame',
     name: 'HallOfFame',
     component: HallOfFame,
+    meta: { requiresAuth: true }, // Restrict access
+  },
+  {
+    path: '/cheese/:id',
+    name: 'CheeseInfo',
+    component: CheeseInfoPage,
     meta: { requiresAuth: true }, // Restrict access
   },
   {
