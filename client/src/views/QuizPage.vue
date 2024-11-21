@@ -1,277 +1,350 @@
 <template>
-  <div class="responsive-title">
-  <h1>Quiz</h1>
-  <hr />
-</div>
-
-
-  <div>
-    <!-- Sélection des thèmes -->
-    <div v-if="!quizStarted" class="theme-selection">
-        <h3>Select your quiz subject!</h3>
-        <div class="themes">
-        <div
-            v-for="theme in themes"
-            :key="theme.name"
-            class="theme-card"
-            @click="loadQuiz(theme.key)"
-        >
-            <img :src="theme.image" :alt="theme.name" class="theme-image" />
-            <h3>{{ theme.name }}</h3>
+    <div class="quiz-page">
+        <div class="title-container">
+            <h1>Quiz</h1>
         </div>
+    <p class="quiz-subtitle" v-if="!currentQuiz">Select your quiz subject!</p>
+    <div class="quiz-categories" v-if="!currentQuiz">
+        <div
+        class="quiz-card"
+        @click="startQuiz('basic-knowledge')"
+        :class="{ disabled: quizStarted }"
+        >
+        <img src="/images/basic-knowledge.png" alt="Basic Knowledge" class="quiz-image" />
+        <p class="quiz-title">Basic Knowledge</p>
+        </div>
+        <div
+        class="quiz-card"
+        @click="startQuiz('tasting-cheese')"
+        :class="{ disabled: quizStarted }"
+        >
+        <img src="/images/tasting-cheese.png" alt="Tasting Cheese" class="quiz-image" />
+        <p class="quiz-title">Tasting Cheese</p>
+        </div>
+        <div
+        class="quiz-card"
+        @click="startQuiz('pairing-cheese')"
+        :class="{ disabled: quizStarted }"
+        >
+        <img src="/images/pairing-cheese.png" alt="Pairing Cheese" class="quiz-image" />
+        <p class="quiz-title">Pairing Cheese</p>
         </div>
     </div>
-
-    <!-- Questions du quiz -->
-    <div v-else class="question-section">
-        <h3 class="question-title">Question {{ currentQuestionIndex + 1 }}</h3>
-        <p class="question-text">{{ currentQuestion.question }}</p>
-
+    <div v-if="currentQuiz" class="question-box">
+        <h2>Question {{ currentQuestionIndex + 1 }}</h2>
+        <p>{{ currentQuiz[currentQuestionIndex].question }}</p>
         <div class="answers">
-        <label
-            v-for="(answer, index) in currentQuestion.reponses"
-            :key="index"
+        <div
+            v-for="(answer, index) in currentQuiz[currentQuestionIndex].reponses"
+            :key="`question-${currentQuestionIndex}-answer-${index}`"
             class="answer-option"
+            @click="selectAnswer(answer.reponse)"
+            :class="{ selected: selectedAnswer === answer.reponse }"
         >
             <input
             type="radio"
+            :id="`answer-${index}`"
             :name="'question-' + currentQuestionIndex"
-            :value="answer.correct"
+            :value="answer.reponse"
             v-model="selectedAnswer"
             />
-            {{ answer.reponse }}
-        </label>
+            <label :for="`answer-${index}`">{{ answer.reponse }}</label>
         </div>
-
-        <button class="next-button" @click="nextQuestion">➔</button>
+        </div>
+        <button
+        class="next-button"
+        :disabled="selectedAnswer === null"
+        @click="submitAnswer"
+        >
+        <span>&#x27A4;</span>
+        </button>
+    </div>
+    <div v-if="quizCompleted" class="quiz-completed">
+        <h2>Quiz completed!</h2>
+        <p>Your score: {{ score }}/{{ currentQuiz.length }}</p>
+        
+    <button class="back-to-quiz-selection" @click="resetQuiz">Back to Quiz Selection</button>
+    
     </div>
     </div>
 </template>
-  
+
 <script>
-    export default {
-        data() {
-  return {
-    themes: [
-      { name: "Basic Knowledge", key: "basic-knowledge", image: "/images/basic-knowledge.png" },
-      { name: "Tasting Cheese", key: "tasting-cheese", image: "/images/tasting-cheese.png" },
-      { name: "Pairing Cheese", key: "pairing-cheese", image: "/images/pairing-cheese.png" },
-    ],
-    currentTheme: null,
-    quizStarted: false,
-    quizData: [], // Initialisation correcte
-    currentQuestionIndex: 0,
-    selectedAnswer: null,
-  };
-},
-    computed: {
-        currentQuestion() {
-            return this.quizData.length > 0 ? this.quizData[this.currentQuestionIndex] : null;
+export default {
+    data() {
+    return {
+        quizzes: {
+        'basic-knowledge': [],
+        'tasting-cheese': [],
+        'pairing-cheese': []
         },
+        currentQuiz: null,
+        currentQuestionIndex: 0,
+        selectedAnswer: null,
+        score: 0,
+        quizCompleted: false,
+        quizStarted: false // Indique si un quiz est en cours
+    };
     },
     methods: {
-        async loadQuiz(theme) {
-            try {
-                const response = await fetch(`/data/${theme}.json`);
-                const data = await response.json();
-                this.quizData = data.quizz || []; // Assurez-vous que quizz est bien défini
-                this.currentTheme = theme;
-                this.quizStarted = true;
-                this.currentQuestionIndex = 0;
-            } catch (error) {
-                console.error("Failed to load quiz:", error);
-                this.quizData = []; // Initialisez comme tableau vide en cas d'erreur
-            }
-        },
-        nextQuestion() {
-        if (this.currentQuestionIndex < this.quizData.length - 1) {
-            this.currentQuestionIndex++;
-        } else {
-            alert("Quiz completed!");
-            this.quizStarted = false;
+    async fetchQuizzes() {
+        try {
+        this.quizzes['basic-knowledge'] = await fetch('/data/basic-knowledge.json').then(res => res.json());
+        this.quizzes['tasting-cheese'] = await fetch('/data/tasting-cheese.json').then(res => res.json());
+        this.quizzes['pairing-cheese'] = await fetch('/data/pairing-cheese.json').then(res => res.json());
+        } catch (error) {
+        console.error('Error fetching quizzes:', error);
         }
-        },
     },
-    };
+    startQuiz(category) {
+        if (!this.quizStarted) {
+        this.currentQuiz = this.quizzes[category].quizz;
+        this.currentQuestionIndex = 0;
+        this.score = 0;
+        this.quizCompleted = false;
+        this.quizStarted = true; // Marque le quiz comme démarré
+        this.selectedAnswer = null;
+        }
+    },
+    selectAnswer(answer) {
+        this.selectedAnswer = answer; // Met à jour la réponse sélectionnée immédiatement
+    },
+    submitAnswer() {
+        const correctAnswer = this.currentQuiz[this.currentQuestionIndex].reponses.find(r => r.correct).reponse;
+        if (this.selectedAnswer === correctAnswer) {
+        this.score++;
+        }
+        this.selectedAnswer = null;
+        if (this.currentQuestionIndex < this.currentQuiz.length - 1) {
+        this.currentQuestionIndex++;
+        } else {
+        this.quizCompleted = true;
+        this.quizStarted = false; // Libère la sélection de quiz
+        }
+    },
+    resetQuiz() {
+        this.currentQuiz = null;
+        this.quizCompleted = false;
+        this.quizStarted = false;
+    }
+    },
+    created() {
+    this.fetchQuizzes();
+    }
+};
 </script>
 
-
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
 
-   /* Conteneur principal du quiz */
-  .quiz-heading {
-    font-family: 'Rubik', sans-serif;
-    font-weight: 700;
-    font-family: 'Rubik';
-    font-weight: 700;
-    font-size: 2.5rem;
-    color: #624A2E;
+.quiz-page {
     text-align: center;
-    margin-bottom: 10px;
-  }
-
-  .theme-selection,
-  .question-section {
+    margin: 20px;
     font-family: 'Rubik', sans-serif;
-  }
-  .theme-selection {
-    text-align: center;
-    margin-top: 20px;
-  }
+}
 
-  .themes {
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #5f4b8b;
+}
+
+.quiz-subtitle {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.quiz-categories {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-  }
+    gap: 30px;
+}
 
-  .theme-card {
-    width: 180px;
-    padding: 10px;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    text-align: center;
-    background-color: #F8F8F8;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+.quiz-card {
+    background-color: #fdf6e4;
+    border-radius: 15px;
+    width: 200px;
+    height: 250px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
-  }
+}
 
-  .theme-card:hover {
-    transform: scale(1.05);
-    border-color: #D4AF37; /* Couleur dorée pour mettre en évidence */
-  }
+.quiz-card.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 
-  .theme-image {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
+.quiz-card:hover:not(.disabled) {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
 
-  /* Section des questions */
-  .question-section {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    border: 1px solid #E0E0E0;
-    border-radius: 12px;
-    background-color: #FFFFFF;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .question-title {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #333;
-    background-color: #FFEDCC;
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 8px;
+.quiz-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
     margin-bottom: 15px;
-  }
+    object-fit: cover;
+}
 
-  .question-text {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-  }
+.quiz-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+}
 
-  .answers {
+.question-box {
+    margin: 20px auto;
+    padding: 25px 30px;
+    border-radius: 15px;
+    background-color: #f8f8f8;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 650px;
+    position: relative;
+    padding-bottom: 70px;
+}
+
+.answers {
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
+}
 
-  .answer-option {
-    font-family: 'Rubik', sans-serif;
-    font-weight: 400;
+.answer-option {
     display: flex;
     align-items: center;
-    padding: 10px;
-    background-color: #EDF4FF;
-    border: 1px solid #D0E3FF;
-    border-radius: 8px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    background-color: #e8f0fe;
+    transition: background-color 0.3s ease;
     cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
+}
 
-  .answer-option:hover {
-    background-color: #D9EFFF;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+.answer-option.selected {
+    background-color: #d0e2fc;
+    border: 2px solid #007bff;
+}
 
-  .answer-option input {
-    margin-right: 10px;
-  }
-
-  /* Bouton suivant */
-  .next-button {
-    background-color: #B9FBC0;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 1.5rem;
-    color: #000;
+.answer-option input {
+    margin-right: 15px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-    margin-left: auto;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
+}
 
-  .next-button:hover {
-    background-color: #A2EBAE;
+.answer-option label {
+    font-size: 16px;
+    color: #333333;
+    cursor: pointer;
+}
+
+.next-button {
+position: absolute;
+bottom: 10px; /* Ajuste cette valeur pour baisser la flèche */
+right: 20px;
+width: 50px;
+height: 50px;
+background-color: #2ecc71;
+color: #ffffff;
+border: none;
+border-radius: 50%;
+font-size: 22px;
+font-weight: bold;
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+.next-button:hover {
+    background-color: #27ae60;
     transform: scale(1.1);
-  }
-
-  /* Pied de page */
-  .footer {
-    margin-top: 50px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #777;
-  }
-
-  .responsive-title {
-  display: flex;
-  align-items: center;
-  position: relative;
-  margin-bottom: 20px;
-  width: 100%;
 }
 
-.responsive-title h1 {
-  font-family: 'Rubik', sans-serif;
-  font-weight: 500;
-  font-size: 3rem;
-  color: #575dce;
-  background-color: #f5f3e7;
-  padding: 0 15px; /* Adjust space around title text */
-  margin-left: 10%; /* Shift the title slightly to the left */
-  z-index: 1;
+.title-container {
+display: flex;
+align-items: center;
+position: relative;
+margin-bottom: 20px;
+width: 100%;
 }
 
-.responsive-title hr {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px; /* Reduce the line thickness */
-  background-color: black; /* Change line color to black */
-  z-index: 0;
+.title-container h1 {
+font-family: 'Rubik', sans-serif;
+font-weight: 500;
+font-size: 3rem;
+color: #575dce;
+background-color: #f5f3e7;
+padding: 0 15px; 
+margin-left: 10%; 
+z-index: 1;
 }
 
-/* Design responsive */
-@media (max-width: 768px) {
-  .responsive-title h1 {
-    font-size: 2rem; /* Réduit la taille du titre */
-  }
+.title-container::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 0;
+right: 0;
+height: 1px; 
+background-color: black; 
+z-index: 0;
+}
+.title-container {
+display: flex;
+align-items: center;
+position: relative;
+margin-bottom: 20px;
+width: 100%;
 }
 
+.title-container h1 {
+font-family: 'Rubik', sans-serif;
+font-weight: 500;
+font-size: 3rem;
+color: #575dce; /* Violet correspondant au style */
+background-color: #f5f3e7; /* Fond clair */
+padding: 0 15px;
+margin-left: 10%;
+z-index: 1;
+}
+
+.title-container::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 0;
+right: 0;
+height: 1px;
+background-color: black;
+z-index: 0;
+}
+
+.back-to-quiz-selection {
+    font-family: 'Rubik', sans-serif;
+    background-color: #f5f3e7; /* Fond clair */
+    color: #575dce; /* Violet correspondant au thème */
+    border: 2px solid #575dce;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-to-quiz-selection:hover {
+    background-color: #575dce;
+    color: #f5f3e7;
+    transform: scale(1.05);
+}
 
 </style>
-
