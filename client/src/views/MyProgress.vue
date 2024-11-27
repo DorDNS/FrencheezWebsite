@@ -14,6 +14,7 @@
         </div>
       </div>
     </div>
+    <button v-if="isAdmin" @click="goToAdminPage" class="manage-button">Manage Website</button>
     <button @click="logout" class="logout-button">Log Out</button>
   </div>
 </template>
@@ -26,6 +27,7 @@ export default {
   data() {
     return {
       favoriteCheeses: [], // Store favorite cheeses
+      isAdmin: false, // Store admin status
     };
   },
   methods: {
@@ -35,15 +37,24 @@ export default {
     },
     async fetchFavorites() {
       try {
+        // Fetch favorite cheeses
         const response = await axios.get("/favorites");
-        console.log(response.data); // Vérifiez les données dans la console
+        console.log(response.data); // Debugging step
         this.favoriteCheeses = response.data; // Expecting cheese_id, name, and image_path
+
+        // Fetch user data to check if they are admin
+        const userResponse = await axios.get("/user");
+        this.isAdmin = parseInt(userResponse.data.admin, 10) === 1; // Convert admin to integer and compare
+        console.log(userResponse.data)
       } catch (error) {
-        console.error("Error fetching favorite cheeses:", error);
+        console.error("Error fetching favorite cheeses or user data:", error);
       }
     },
     goToCheeseInfo(cheeseId) {
       this.$router.push({ name: "CheeseInfo", params: { id: cheeseId } });
+    },
+    goToAdminPage() {
+      this.$router.push("/admin");
     },
   },
   created() {
@@ -88,6 +99,34 @@ export default {
 
 .logout-button:active {
   background-color: #FF7F7F;
+  transform: scale(0.98);
+}
+
+.manage-button {
+  display: block;
+  margin: 10px auto;
+  width: 300px;
+  height: 50px;
+  font-size: 1.5rem;
+  color: #DAA520; /* Dark yellow text for contrast */
+  background-color: #FFFACD; /* Lighter yellow background */
+  border: none;
+  border-radius: 40px;
+  font-family: "Rubik", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.manage-button:hover {
+  background-color: #FFECB3; /* Slightly darker shade of light yellow on hover */
+  transform: scale(1.02);
+}
+
+.manage-button:active {
+  background-color: #FFE4B5; /* A deeper light yellow for active state */
   transform: scale(0.98);
 }
 

@@ -59,3 +59,22 @@ app.get('/api/cheeses/:id', authMiddleware, (req, res) => {
     });
 });
 
+app.get('/api/user', authMiddleware, (req, res) => {
+    const userId = req.user.id;
+  
+    const sql = 'SELECT id, username, full_name, admin FROM Users WHERE id = ?';
+    db.query(sql, [userId], (err, results) => {
+      if (err) {
+        console.error('Error retrieving user details:', err);
+        res.status(500).send('Error retrieving user details');
+        return;
+      }
+  
+      if (results.length === 0) {
+        res.status(404).send('User not found');
+        return;
+      }
+  
+      res.json(results[0]); // Send the first result (user details)
+    });
+  });
