@@ -3,136 +3,138 @@
         <div class="title-container">
             <h1>Quiz</h1>
         </div>
-    <p class="quiz-subtitle" v-if="!currentQuiz">Select your quiz subject!</p>
-    <div class="quiz-categories" v-if="!currentQuiz">
-        <div
-        class="quiz-card"
-        @click="startQuiz('basic-knowledge')"
-        :class="{ disabled: quizStarted }"
-        >
-        <img src="/images/basic-knowledge.png" alt="Basic Knowledge" class="quiz-image" />
-        <p class="quiz-title">Basic Knowledge</p>
+        <p class="quiz-subtitle" v-if="!currentQuiz">Select your quiz subject!</p>
+        <div class="quiz-categories" v-if="!currentQuiz">
+            <div
+                class="quiz-card"
+                @click="startQuiz('basic-knowledge')"
+                :class="{ disabled: quizStarted }"
+            >
+                <img src="/images/basic-knowledge.png" alt="Basic Knowledge" class="quiz-image" />
+                <p class="quiz-title">Basic Knowledge</p>
+            </div>
+            <div
+                class="quiz-card"
+                @click="startQuiz('tasting-cheese')"
+                :class="{ disabled: quizStarted }"
+            >
+                <img src="/images/tasting-cheese.png" alt="Tasting Cheese" class="quiz-image" />
+                <p class="quiz-title">Tasting Cheese</p>
+            </div>
+            <div
+                class="quiz-card"
+                @click="startQuiz('pairing-cheese')"
+                :class="{ disabled: quizStarted }"
+            >
+                <img src="/images/pairing-cheese.png" alt="Pairing Cheese" class="quiz-image" />
+                <p class="quiz-title">Pairing Cheese</p>
+            </div>
         </div>
-        <div
-        class="quiz-card"
-        @click="startQuiz('tasting-cheese')"
-        :class="{ disabled: quizStarted }"
-        >
-        <img src="/images/tasting-cheese.png" alt="Tasting Cheese" class="quiz-image" />
-        <p class="quiz-title">Tasting Cheese</p>
+        <div v-if="currentQuiz" class="question-box">
+            <h2>Question {{ currentQuestionIndex + 1 }}</h2>
+            <p>{{ currentQuiz[currentQuestionIndex].question }}</p>
+            <div class="answers">
+                <div
+                    v-for="(answer, index) in currentQuiz[currentQuestionIndex].reponses"
+                    :key="`question-${currentQuestionIndex}-answer-${index}`"
+                    class="answer-option"
+                    @click="selectAnswer(answer.reponse)"
+                    :class="{ selected: selectedAnswer === answer.reponse }"
+                >
+                    <input
+                        type="radio"
+                        :id="`answer-${index}`"
+                        :name="'question-' + currentQuestionIndex"
+                        :value="answer.reponse"
+                        v-model="selectedAnswer"
+                    />
+                    <label :for="`answer-${index}`">{{ answer.reponse }}</label>
+                </div>
+            </div>
+            <button
+                class="next-button"
+                :disabled="selectedAnswer === null || quizCompleted"
+                @click="submitAnswer"
+            >
+                <span>&#x27A4;</span>
+            </button>
         </div>
-        <div
-        class="quiz-card"
-        @click="startQuiz('pairing-cheese')"
-        :class="{ disabled: quizStarted }"
-        >
-        <img src="/images/pairing-cheese.png" alt="Pairing Cheese" class="quiz-image" />
-        <p class="quiz-title">Pairing Cheese</p>
+        <div v-if="quizCompleted" class="quiz-completed">
+            <h2>Quiz completed!</h2>
+            <p>Your score: {{ score }}/{{ currentQuiz.length }}</p>
+            
+            <button class="back-to-quiz-selection" @click="resetQuiz">Back to Quiz Selection</button>
         </div>
-    </div>
-    <div v-if="currentQuiz" class="question-box">
-        <h2>Question {{ currentQuestionIndex + 1 }}</h2>
-        <p>{{ currentQuiz[currentQuestionIndex].question }}</p>
-        <div class="answers">
-        <div
-            v-for="(answer, index) in currentQuiz[currentQuestionIndex].reponses"
-            :key="`question-${currentQuestionIndex}-answer-${index}`"
-            class="answer-option"
-            @click="selectAnswer(answer.reponse)"
-            :class="{ selected: selectedAnswer === answer.reponse }"
-        >
-            <input
-            type="radio"
-            :id="`answer-${index}`"
-            :name="'question-' + currentQuestionIndex"
-            :value="answer.reponse"
-            v-model="selectedAnswer"
-            />
-            <label :for="`answer-${index}`">{{ answer.reponse }}</label>
-        </div>
-        </div>
-        <button
-        class="next-button"
-        :disabled="selectedAnswer === null"
-        @click="submitAnswer"
-        >
-        <span>&#x27A4;</span>
-        </button>
-    </div>
-    <div v-if="quizCompleted" class="quiz-completed">
-        <h2>Quiz completed!</h2>
-        <p>Your score: {{ score }}/{{ currentQuiz.length }}</p>
-        
-    <button class="back-to-quiz-selection" @click="resetQuiz">Back to Quiz Selection</button>
-    
-    </div>
     </div>
 </template>
 
 <script>
 export default {
     data() {
-    return {
-        quizzes: {
-        'basic-knowledge': [],
-        'tasting-cheese': [],
-        'pairing-cheese': []
-        },
-        currentQuiz: null,
-        currentQuestionIndex: 0,
-        selectedAnswer: null,
-        score: 0,
-        quizCompleted: false,
-        quizStarted: false // Indique si un quiz est en cours
-    };
+        return {
+            quizzes: {
+                'basic-knowledge': [],
+                'tasting-cheese': [],
+                'pairing-cheese': []
+            },
+            currentQuiz: null,
+            currentQuestionIndex: 0,
+            selectedAnswer: null,
+            score: 0,
+            quizCompleted: false,
+            quizStarted: false // Indique si un quiz est en cours
+        };
     },
     methods: {
-    async fetchQuizzes() {
-        try {
-        this.quizzes['basic-knowledge'] = await fetch('/data/basic-knowledge.json').then(res => res.json());
-        this.quizzes['tasting-cheese'] = await fetch('/data/tasting-cheese.json').then(res => res.json());
-        this.quizzes['pairing-cheese'] = await fetch('/data/pairing-cheese.json').then(res => res.json());
-        } catch (error) {
-        console.error('Error fetching quizzes:', error);
+        async fetchQuizzes() {
+            try {
+                this.quizzes['basic-knowledge'] = await fetch('/data/basic-knowledge.json').then(res => res.json());
+                this.quizzes['tasting-cheese'] = await fetch('/data/tasting-cheese.json').then(res => res.json());
+                this.quizzes['pairing-cheese'] = await fetch('/data/pairing-cheese.json').then(res => res.json());
+            } catch (error) {
+                console.error('Error fetching quizzes:', error);
+            }
+        },
+        startQuiz(category) {
+            if (!this.quizStarted) {
+                this.currentQuiz = this.quizzes[category].quizz;
+                this.currentQuestionIndex = 0;
+                this.score = 0;
+                this.quizCompleted = false;
+                this.quizStarted = true; // Marque le quiz comme démarré
+                this.selectedAnswer = null;
+            }
+        },
+        selectAnswer(answer) {
+            this.selectedAnswer = answer; // Met à jour la réponse sélectionnée immédiatement
+        },
+        submitAnswer() {
+            if (!this.quizCompleted) {
+                const correctAnswer = this.currentQuiz[this.currentQuestionIndex].reponses.find(r => r.correct).reponse;
+                if (this.selectedAnswer === correctAnswer) {
+                    this.score++;
+                }
+                this.selectedAnswer = null;
+                if (this.currentQuestionIndex < this.currentQuiz.length - 1) {
+                    this.currentQuestionIndex++;
+                } else {
+                    this.quizCompleted = true;
+                    this.quizStarted = false; // Libère la sélection de quiz
+                }
+            }
+        },
+        resetQuiz() {
+            this.currentQuiz = null;
+            this.quizCompleted = false;
+            this.quizStarted = false;
         }
-    },
-    startQuiz(category) {
-        if (!this.quizStarted) {
-        this.currentQuiz = this.quizzes[category].quizz;
-        this.currentQuestionIndex = 0;
-        this.score = 0;
-        this.quizCompleted = false;
-        this.quizStarted = true; // Marque le quiz comme démarré
-        this.selectedAnswer = null;
-        }
-    },
-    selectAnswer(answer) {
-        this.selectedAnswer = answer; // Met à jour la réponse sélectionnée immédiatement
-    },
-    submitAnswer() {
-        const correctAnswer = this.currentQuiz[this.currentQuestionIndex].reponses.find(r => r.correct).reponse;
-        if (this.selectedAnswer === correctAnswer) {
-        this.score++;
-        }
-        this.selectedAnswer = null;
-        if (this.currentQuestionIndex < this.currentQuiz.length - 1) {
-        this.currentQuestionIndex++;
-        } else {
-        this.quizCompleted = true;
-        this.quizStarted = false; // Libère la sélection de quiz
-        }
-    },
-    resetQuiz() {
-        this.currentQuiz = null;
-        this.quizCompleted = false;
-        this.quizStarted = false;
-    }
     },
     created() {
-    this.fetchQuizzes();
+        this.fetchQuizzes();
     }
 };
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
