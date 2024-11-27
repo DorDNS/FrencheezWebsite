@@ -3,9 +3,10 @@ const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const authRoutes = require('./authRoutes');
-const authMiddleware = require('./authMiddleware'); // Middleware for protecting routes
+const { authMiddleware } = require('./authMiddleware'); // Middleware for protecting routes
 const db = require('./db'); // Import the centralized database connection
 const favoriteRoutes = require('./favorites');
+const adminRoutes = require('./adminRoutes');
 
 
 const app = express();
@@ -23,6 +24,9 @@ app.use('/api/auth', authRoutes);
 
 // Routes for favorites
 app.use('/api', favoriteRoutes);
+
+// Routes for admin
+app.use('/api/admin', adminRoutes);
 
 // Simple root route
 app.get('/', (req, res) => {
@@ -59,22 +63,11 @@ app.get('/api/cheeses/:id', authMiddleware, (req, res) => {
     });
 });
 
-app.get('/api/user', authMiddleware, (req, res) => {
-    const userId = req.user.id;
-  
-    const sql = 'SELECT id, username, full_name, admin FROM Users WHERE id = ?';
-    db.query(sql, [userId], (err, results) => {
-      if (err) {
-        console.error('Error retrieving user details:', err);
-        res.status(500).send('Error retrieving user details');
-        return;
-      }
-  
-      if (results.length === 0) {
-        res.status(404).send('User not found');
-        return;
-      }
-  
-      res.json(results[0]); // Send the first result (user details)
+app.get("/api/user", authMiddleware, (req, res) => {
+    const sql = "SELECT id, username, full_name, admin FROM Users WHERE id = ?";
+    db.query(sql, [req.user.id], (err, results) => {
+      if (err) return res.status(500).send("Error fetching user details");
+      if (results.length === 0) return res.status(404).send("User not found");
+      res.json(results[0]); // Return the first result
     });
   });

@@ -6,6 +6,8 @@ import RegisterPage from '@/views/RegisterPage.vue';
 import MyProgress from '@/views/MyProgress.vue';
 import Quiz from '@/views/QuizPage.vue';
 import CheeseInfoPage from '@/views/CheeseInfoPage.vue';
+import AdminPage from '@/views/AdminPage.vue';
+import UserManagement from '@/views/UserManagement.vue';
 
 const routes = [
   { 
@@ -30,9 +32,27 @@ const routes = [
     meta: { requiresAuth: true }, // Restrict access
   },
   {
+    path: '/admin',
+    name: 'Admin',
+    component: AdminPage,
+    meta: { requiresAuth: true, requiresAdmin: true }, // Restrict access to admins
+  },
+  {
+    path: '/user-management',
+    name: 'UserManagement',
+    component: UserManagement,
+    meta: { requiresAuth: true, requiresAdmin: true }, // Restrict access to admins
+  },
+  {
     path: '/cheese/:id',
     name: 'CheeseInfo',
     component: CheeseInfoPage,
+    meta: { requiresAuth: true }, // Restrict access
+  },
+  {
+    path: '/quiz',
+    name: 'Quiz',
+    component: Quiz,
     meta: { requiresAuth: true }, // Restrict access
   },
   {
@@ -41,12 +61,6 @@ const routes = [
     component: MyProgress,
     meta: { requiresAuth: true }, // Restrict access
   },
-  {
-    path: '/quiz',
-    name: 'Quiz',
-    component: Quiz,
-    meta: { requiresAuth: true }, // Restrict access
-  }
 ];
 
 const router = createRouter({
@@ -71,12 +85,15 @@ function isTokenValid() {
 
 // Global navigation guard to check authentication
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthenticated = isTokenValid();
+  const isAdmin = JSON.parse(localStorage.getItem('isAdmin') || 'false');
 
-  if (requiresAuth && !isTokenValid()) {
-    next('/login'); // Redirect to login if token is invalid or missing
+  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+    next('/login');
+  } else if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
+    next('/');
   } else {
-    next(); // Allow navigation
+    next();
   }
 });
 

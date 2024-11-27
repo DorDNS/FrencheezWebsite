@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authMiddleware = require('./authMiddleware');
+const { authMiddleware } = require('./authMiddleware'); // Assurez-vous que authMiddleware est correctement importé
 const db = require('./db');
 
 // Add a favorite

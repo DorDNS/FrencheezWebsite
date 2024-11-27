@@ -15,4 +15,11 @@ function authMiddleware(req, res, next) {
   }
 }
 
-module.exports = authMiddleware;
+function adminMiddleware(req, res, next) {
+  if (!req.user || req.user.admin !== 1) {
+    return res.status(403).send('Access denied');
+  }
+  next();
+}
+
+module.exports = { authMiddleware, adminMiddleware };
