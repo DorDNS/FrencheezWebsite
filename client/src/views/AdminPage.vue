@@ -12,6 +12,11 @@
           <h3>{{ card.title }}</h3>
           <p>{{ card.description }}</p>
         </div>
+        <div class="admin-card" @click="$router.push({ name: 'CheesesList' })">
+          <img src="/images/cheese-icon.png" alt="Cheese Icon" />
+          <h3>Manage Cheeses</h3>
+          <p>Manage the list of cheeses.</p>
+        </div>
       </div>
     </div>
   </template>

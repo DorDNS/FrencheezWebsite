@@ -8,6 +8,7 @@ import Quiz from '@/views/QuizPage.vue';
 import CheeseInfoPage from '@/views/CheeseInfoPage.vue';
 import AdminPage from '@/views/AdminPage.vue';
 import UserManagement from '@/views/UserManagement.vue';
+import CheesesList from '@/views/CheesesList.vue';
 
 const routes = [
   { 
@@ -36,6 +37,11 @@ const routes = [
     name: 'Admin',
     component: AdminPage,
     meta: { requiresAuth: true, requiresAdmin: true }, // Restrict access to admins
+  },
+  {
+    path: '/admin/cheeses',
+    name: 'CheesesList',
+    component: CheesesList
   },
   {
     path: '/user-management',
