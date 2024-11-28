@@ -201,48 +201,47 @@ export default {
 };
 </script>
 
-  
-  <style scoped>
-  .hall-of-fame {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  h1 {
-    font-size: 3rem;
-    color: #575dce;
-    margin-bottom: 20px;
-  }
-  
-  .search-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .search-container input {
-    width: 60%;
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
-    background-color: #e1e0e0;
-    font-size: 1.2rem;
-  }
-  
-  .filter-icon {
-    width: 24px;
-    height: 24px;
-    margin-left: 10px;
-  }
-  
-  .cheese-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-  }
-  
-  .cheese-card {
+<style scoped>
+.hall-of-fame {
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3rem;
+  color: #575dce;
+  margin-bottom: 20px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  width: 60%;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: #e1e0e0;
+  font-size: 1.2rem;
+}
+
+.filter-icon {
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+}
+
+.cheese-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.cheese-card {
   position: relative;
   background-color: #ffffff;
   border-radius: 15px;
@@ -250,6 +249,12 @@ export default {
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for transform and box-shadow */
+}
+
+.cheese-card:hover {
+  transform: translateY(-10px); /* Slightly lift the card on hover */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
 }
 
 .cheese-image {
@@ -277,7 +282,6 @@ export default {
   text-decoration: none; 
 }
 
-
 .favorite-icon {
   position: absolute;
   top: 10px;
@@ -285,10 +289,12 @@ export default {
   font-size: 1.5rem;
   color: #d9d9d9;
   cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease; /* Add transition for color and transform */
 }
 
 .favorite-icon:hover {
   color: #ffdd57;
+  transform: scale(1.2); /* Slightly enlarge the icon on hover */
 }
 
 .title-container {
@@ -374,5 +380,4 @@ export default {
 .button-container button:hover {
   background-color: #4646a8;
 }
-
 </style>

@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header-content">
-      <div class="logo">Frencheez</div>
+      <router-link to="/" class="logo">Frencheez</router-link>
       <nav class="navigation">
         <router-link to="/" class="nav-link">Home</router-link>
         <router-link to="/hall-of-fame" class="nav-link">Hall of Fame</router-link>
@@ -40,6 +40,13 @@ export default {
   font-family: 'Leckerli One', cursive;
   font-size: 48px;
   color: #2c2c27;
+  text-decoration: none; /* Remove underline from the link */
+  transition: color 0.3s ease, transform 0.2s ease; /* Add transition for color and transform */
+}
+
+.logo:hover {
+  color: rgb(10, 137, 201); /* Change color on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 .navigation {
@@ -55,6 +62,16 @@ export default {
   color: #382877;
   text-decoration: none;
   white-space: nowrap; /* Prevents any of the nav items from wrapping */
+  transition: color 0.3s ease, transform 0.2s ease; /* Add transition for color and transform */
+}
+
+.nav-link:hover {
+  color: hwb(259 29% 45%); /* Change color on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.nav-link:active {
+  transform: scale(0.95); /* Slightly shrink on click */
 }
 
 .progress-button {
@@ -69,6 +86,16 @@ export default {
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap; /* Prevents the text from wrapping to two lines */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Add transition for background-color and transform */
+}
+
+.progress-button:hover {
+  background-color: #f5d78e; /* Change background color on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.progress-button:active {
+  transform: scale(0.95); /* Slightly shrink on click */
 }
 
 .progress-button img {
