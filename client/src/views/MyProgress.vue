@@ -15,6 +15,7 @@
       </div>
     </div>
     <button v-if="isAdmin" @click="goToAdminPage" class="manage-button">Manage Website</button>
+    <button @click="goToEditProfile" class="edit-profile-button">Edit Profile</button>
     <button @click="logout" class="logout-button">Log Out</button>
   </div>
 </template>
@@ -55,6 +56,9 @@ export default {
     },
     goToAdminPage() {
       this.$router.push("/admin");
+    },
+    goToEditProfile() {
+      this.$router.push("/edit-profile");
     },
   },
   created() {
@@ -177,5 +181,33 @@ export default {
   font-weight: bold;
   color: #333;
   font-family: "Rubik", sans-serif;
+}
+
+.edit-profile-button {
+  display: block;
+  margin: 10px auto;
+  width: 300px;
+  height: 50px;
+  font-size: 1.5rem;
+  color: #0056b3; /* Stronger blue text */
+  background-color: #cce5ff; /* Light blue background */
+  border: none;
+  border-radius: 40px;
+  font-family: "Rubik", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-profile-button:hover {
+  background-color: #b3d7ff; /* Slightly darker shade of light blue on hover */
+  transform: scale(1.02);
+}
+
+.edit-profile-button:active {
+  background-color: #99c9ff; /* Even darker shade of light blue on active */
+  transform: scale(0.98);
 }
 </style>

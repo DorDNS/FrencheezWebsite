@@ -9,6 +9,7 @@ import CheeseInfoPage from '@/views/CheeseInfoPage.vue';
 import AdminPage from '@/views/AdminPage.vue';
 import UserManagement from '@/views/UserManagement.vue';
 import CheesesList from '@/views/CheesesList.vue';
+import EditProfile from '@/views/EditProfile.vue';
 
 const routes = [
   { 
@@ -66,6 +67,11 @@ const routes = [
     name: 'MyProgress',
     component: MyProgress,
     meta: { requiresAuth: true }, // Restrict access
+  },
+  {
+    path: '/edit-profile',
+    name: 'EditProfile',
+    component: EditProfile,
   },
 ];
 
