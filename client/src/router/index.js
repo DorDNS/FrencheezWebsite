@@ -9,7 +9,9 @@ import CheeseInfoPage from '@/views/CheeseInfoPage.vue';
 import AdminPage from '@/views/AdminPage.vue';
 import UserManagement from '@/views/UserManagement.vue';
 import CheesesList from '@/views/CheesesList.vue';
+import EditQuizzesPage from '@/views/EditQuizzesPage.vue';
 import EditProfile from '@/views/EditProfile.vue';
+
 
 const routes = [
   { 
@@ -67,6 +69,12 @@ const routes = [
     name: 'MyProgress',
     component: MyProgress,
     meta: { requiresAuth: true }, // Restrict access
+  },
+  {
+    path: '/admin/edit-quizzes',
+    name: 'EditQuizzes',
+    component: EditQuizzesPage,
+    meta: { requiresAuth: true, requiresAdmin: true } // Si nécessaire
   },
   {
     path: '/edit-profile',

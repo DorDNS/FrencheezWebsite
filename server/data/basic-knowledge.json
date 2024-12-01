@@ -1,0 +1,80 @@
+{
+  "quizz": [
+    {
+      "question": "Which cheese is known for a creamy, earthy flavor with hints of mushroom?",
+      "reponses": [
+        {
+          "reponse": "Camembert",
+          "correct": true
+        },
+        {
+          "reponse": "Brie",
+          "correct": false
+        },
+        {
+          "reponse": "Munster",
+          "correct": false
+        },
+        {
+          "reponse": "Saint-Nectaire",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Which cheese is traditionally paired with Champagne or red Bordeaux?",
+      "reponses": [
+        {
+          "reponse": "Camembert",
+          "correct": true
+        },
+        {
+          "reponse": "Ossau-Iraty",
+          "correct": false
+        },
+        {
+          "reponse": "Roquefort",
+          "correct": false
+        },
+        {
+          "reponse": "Reblochon",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "What type of milk is used in Brie cheese?",
+      "reponses": [
+        {
+          "reponse": "Cow",
+          "correct": true
+        },
+        {
+          "reponse": "Sheep",
+          "correct": false
+        },
+        {
+          "reponse": "Goat",
+          "correct": false
+        },
+        {
+          "reponse": "Buffalo",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Coucou",
+      "reponses": [
+        {
+          "reponse": "Oui",
+          "correct": true
+        },
+        {
+          "reponse": "Non",
+          "correct": false
+        }
+      ]
+    }
+  ]
+}

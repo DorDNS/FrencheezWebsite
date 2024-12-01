@@ -1,0 +1,72 @@
+{
+  "name": "pairing-cheese",
+  "quizz": [
+    {
+      "question": "Which wine pairs best with Brie cheese?",
+      "reponses": [
+        {
+          "reponse": "Chardonnay or Champagne",
+          "correct": true
+        },
+        {
+          "reponse": "Sauternes or Port",
+          "correct": false
+        },
+        {
+          "reponse": "White Burgundy or Vin Jaune",
+          "correct": false
+        },
+        {
+          "reponse": "Gewürztraminer",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "What is a suitable wine pairing for Roquefort cheese?",
+      "reponses": [
+        {
+          "reponse": "Sauternes or Port",
+          "correct": true
+        },
+        {
+          "reponse": "Merlot or Cabernet Sauvignon",
+          "correct": false
+        },
+        {
+          "reponse": "Red Burgundy",
+          "correct": false
+        },
+        {
+          "reponse": "Champagne or red Bordeaux",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "C'est qui mon bebou préféré ?",
+      "reponses": [
+        {
+          "reponse": "Doryan",
+          "correct": false
+        },
+        {
+          "reponse": "Duryan",
+          "correct": false
+        },
+        {
+          "reponse": "Gaêl",
+          "correct": false
+        },
+        {
+          "reponse": "Calvigael",
+          "correct": true
+        },
+        {
+          "reponse": "Crash ?",
+          "correct": false
+        }
+      ]
+    }
+  ]
+}

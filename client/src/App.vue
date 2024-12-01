@@ -23,28 +23,25 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Leckerli+One&family=Rubik:wght@400;500&display=swap');
 
-/* Reset body margins and padding */
 body, html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  height: 100%; /* Ensure body and html occupy full height */
+  height: 100%; 
 }
 
-/* Apply light yellow background to the entire app */
 #app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f3e7; /* Light yellow background */
+  background-color: #f5f3e7; 
 }
 
 .content {
   flex: 1;
 }
 
-/* Footer styling to ensure it stays at the bottom */
 .router-view {
-  padding-bottom: 20px; /* Optional padding for spacing above the footer */
+  padding-bottom: 20px; 
 }
 </style>

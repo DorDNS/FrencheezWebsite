@@ -9,24 +9,35 @@ const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
 router.post('/register', async (req, res) => {
   const { full_name, username, password } = req.body;
 
+  // Validation des champs
+  if (!full_name || !username || !password) {
+    return res.status(400).send('All fields are required');
+  }
+
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Vérifier si l'utilisateur existe déjà
+    db.query('SELECT * FROM Users WHERE username = ?', [username], async (error, results) => {
+      if (error) return res.status(500).send('Database error');
+      if (results.length > 0) return res.status(400).send('Username already exists');
 
-    // Insert the new user into the database
-    db.query(
-      'INSERT INTO Users (full_name, username, password_hash) VALUES (?, ?, ?)',
-      [full_name, username, hashedPassword],
-      (error, results) => {
-        if (error) return res.status(500).send('User registration failed');
+      // Hachage du mot de passe
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-        // User registered successfully, now generate a token for automatic login
-        const user = { id: results.insertId, username }; // Use the inserted ID and username
-        const token = jwt.sign(user, SECRET_KEY, { expiresIn: '1h' });
+      // Insérer l'utilisateur dans la base de données
+      db.query(
+        'INSERT INTO Users (full_name, username, password_hash) VALUES (?, ?, ?)',
+        [full_name, username, hashedPassword],
+        (error, results) => {
+          if (error) return res.status(500).send('User registration failed');
 
-        // Send the token back to the client
-        res.json({ token });
-      }
-    );
+          // Générer un token pour la connexion automatique
+          const user = { id: results.insertId, username };
+          const token = jwt.sign(user, SECRET_KEY, { expiresIn: '1h' });
+
+          res.json({ token });
+        }
+      );
+    });
   } catch (error) {
     res.status(500).send('Registration error');
   }

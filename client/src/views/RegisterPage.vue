@@ -26,43 +26,43 @@
   </template>
   
   <script>
-import axios from 'axios';
-
-export default {
-  data() {
-    return {
-      fullName: '',
-      username: '',
-      password: '',
-      confirmPassword: '',
-    };
-  },
-  methods: {
-    async register() {
-      if (this.password !== this.confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-      try {
-        const response = await axios.post('http://localhost:3000/api/auth/register', {
-          full_name: this.fullName,
-          username: this.username,
-          password: this.password,
-        });
-        
-        // Save the token in local storage for automatic login
-        localStorage.setItem('token', response.data.token);
-        
-        // Redirect to the Hall of Fame page
-        this.$router.push('/hall-of-fame');
-      } catch (error) {
-        console.error("Registration failed:", error);
-        alert("There was an error creating your account. Please try again.");
-      }
+  import axios from 'axios';
+  
+  export default {
+    data() {
+      return {
+        fullName: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+      };
     },
-  },
-};
-</script>
+    methods: {
+      async register() {
+        if (this.password !== this.confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+        }
+        try {
+          const response = await axios.post('http://localhost:3000/api/auth/register', {
+            full_name: this.fullName,
+            username: this.username,
+            password: this.password,
+          });
+          
+          // Save the token in local storage for automatic login
+          localStorage.setItem('token', response.data.token);
+          
+          // Redirect to the Hall of Fame page
+          this.$router.push('/hall-of-fame');
+        } catch (error) {
+          console.error("Registration failed:", error);
+          alert("There was an error creating your account. Please try again.");
+        }
+      },
+    },
+  };
+  </script>
   
   <style scoped>
   .auth-page {

@@ -2,12 +2,13 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const multer = require('multer');
 const authRoutes = require('./authRoutes');
-const { authMiddleware } = require('./authMiddleware'); // Middleware for protecting routes
-const db = require('./db'); // Import the centralized database connection
+const { authMiddleware } = require('./authMiddleware');
+const db = require('./db');
 const favoriteRoutes = require('./favorites');
 const adminRoutes = require('./adminRoutes');
-const multer = require('multer');
+const quizRoutes = require('./quizRoutes');
 const bcrypt = require('bcrypt');
 
 // Configure multer for file uploads
@@ -18,8 +19,9 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}-${file.originalname}`);
     }
-  });
-  const upload = multer({ storage });
+});
+
+const upload = multer({ storage });
 
 const app = express();
 const port = 3000;
@@ -31,6 +33,9 @@ app.use(bodyParser.json()); // Parse JSON requests
 // Serve static images from the client/public/images directory
 app.use('/images', express.static(path.join(__dirname, '../client/public/images')));
 
+// Serve JSON files statically (optional)
+app.use('/data', express.static(path.join(__dirname, 'data')));
+
 // Routes for authentication (login, register)
 app.use('/api/auth', authRoutes);
 
@@ -38,7 +43,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api', favoriteRoutes);
 
 // Routes for admin
-app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
+
+// Routes for quizzes (dynamic JSON)
+app.use('/api/quiz', quizRoutes);
 
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -46,11 +54,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Simple root route
 app.get('/', (req, res) => {
     res.send('Hello World!');
-});
-
-// Start server
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
 });
 
 // Protected route: Get all cheeses (requires authentication)
@@ -78,26 +81,27 @@ app.get('/api/cheeses/:id', authMiddleware, (req, res) => {
     });
 });
 
-app.get("/api/user", authMiddleware, (req, res) => {
+// User details route
+app.get('/api/user', authMiddleware, (req, res) => {
     const sql = "SELECT id, username, full_name, admin FROM Users WHERE id = ?";
     db.query(sql, [req.user.id], (err, results) => {
-      if (err) return res.status(500).send("Error fetching user details");
-      if (results.length === 0) return res.status(404).send("User not found");
-      res.json(results[0]); // Return the first result
+        if (err) return res.status(500).send("Error fetching user details");
+        if (results.length === 0) return res.status(404).send("User not found");
+        res.json(results[0]); // Return the first result
     });
-  });
+});
 
 // Add a new cheese
 app.post('/api/cheeses', authMiddleware, upload.single('image'), (req, res) => {
     const { name, region, type, milk_type, aging_period, flavor_profile, texture, serving_temperature, wine_pairing, bread_pairing, fruit_pairing } = req.body;
-    const image_path = `/uploads/${req.file.filename}`;
+    const image_path = req.file ? `/uploads/${req.file.filename}` : null;
     const sql = 'INSERT INTO CheeseInfo (name, region, type, milk_type, aging_period, flavor_profile, texture, serving_temperature, wine_pairing, bread_pairing, fruit_pairing, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     db.query(sql, [name, region, type, milk_type, aging_period, flavor_profile, texture, serving_temperature, wine_pairing, bread_pairing, fruit_pairing, image_path], (err) => {
-      if (err) {
-        res.status(500).send('Error adding cheese');
-        throw err;
-      }
-      res.status(201).send('Cheese added successfully');
+        if (err) {
+            res.status(500).send('Error adding cheese');
+            throw err;
+        }
+        res.status(201).send('Cheese added successfully');
     });
 });
 
@@ -119,7 +123,7 @@ app.put('/api/cheeses/:id', authMiddleware, upload.single('image'), (req, res) =
             res.status(500).send('Error updating cheese');
             throw err;
         }
-        res.send('Cheese updated successfully');
+        res.status(200).send('Cheese updated successfully');
     });
 });
 
@@ -128,76 +132,83 @@ app.delete('/api/cheeses/:id', authMiddleware, (req, res) => {
     const { id } = req.params;
     const sql = 'DELETE FROM CheeseInfo WHERE id = ?';
     db.query(sql, [id], (err) => {
-      if (err) {
-        res.status(500).send('Error deleting cheese');
-        throw err;
-      }
-      res.send('Cheese deleted successfully');
+        if (err) {
+            res.status(500).send('Error deleting cheese');
+            throw err;
+        }
+        res.send('Cheese deleted successfully');
     });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// Start server
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
 });
 
 // Get user profile
 app.get('/api/user/profile', authMiddleware, (req, res) => {
-  const userId = req.user.id; 
+    const userId = req.user.id; 
 
-  const query = 'SELECT username, full_name, description FROM Users WHERE id = ?';
-  db.query(query, [userId], (err, results) => {
+    const query = 'SELECT username, full_name, description FROM Users WHERE id = ?';
+    db.query(query, [userId], (err, results) => {
     if (err) {
-      console.error('Error fetching user profile:', err);
-      return res.status(500).json({ error: 'Failed to fetch user profile' });
+        console.error('Error fetching user profile:', err);
+        return res.status(500).json({ error: 'Failed to fetch user profile' });
     }
 
     if (results.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found' });
     }
 
     const user = results[0];
     res.json({
-      full_name: user.full_name,
-      username: user.username,
-      description: user.description,
+        full_name: user.full_name,
+        username: user.username,
+        description: user.description,
     });
-  });
+    });
 });
 
 // Update user profile
 app.put('/api/user/profile', authMiddleware, async (req, res) => {
-  const userId = req.user.id;
-  const { full_name, username, description, password } = req.body;
+    const userId = req.user.id;
+    const { full_name, username, description, password } = req.body;
 
-  console.log('Received data:', { full_name, username, description, password }); // Debug log
-
-  try {
+    try {
     let query = `
-      UPDATE Users
-      SET full_name = ?, username = ?, description = ?`;
+        UPDATE Users
+        SET full_name = ?, username = ?, description = ?`;
     const params = [full_name, username, description];
 
     if (password) {
-      console.log('Hashing password...'); // Debug log
-      const hashedPassword = await bcrypt.hash(password, 10);
-      console.log('Hashed password:', hashedPassword); // Debug log
-      query += `, password_hash = ?`;
-      params.push(hashedPassword);
+        const hashedPassword = await bcrypt.hash(password, 10);
+        query += `, password_hash = ?`;
+        params.push(hashedPassword);
     }
 
     query += ` WHERE id = ?`;
     params.push(userId);
 
     db.query(query, params, (err, results) => {
-      if (err) {
+        if (err) {
         console.error('Error updating user profile:', err);
         return res.status(500).json({ error: 'Failed to update profile' });
-      }
+        }
 
-      if (results.affectedRows === 0) {
+        if (results.affectedRows === 0) {
         return res.status(404).json({ error: 'User not found' });
-      }
+        }
 
-      res.json({ message: 'Profile updated successfully' });
+        res.json({ message: 'Profile updated successfully' });
     });
-  } catch (error) {
+    } catch (error) {
     console.error('Error hashing password:', error);
     res.status(500).json({ error: 'Failed to update profile' });
-  }
+    }
 });

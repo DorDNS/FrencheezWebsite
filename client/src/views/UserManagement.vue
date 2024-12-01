@@ -50,6 +50,13 @@
 <script>
 import axios from 'axios';
 
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:3000',
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+  },
+});
+
 export default {
   data() {
     return {
@@ -66,8 +73,8 @@ export default {
   methods: {
     fetchUsers() {
         const token = localStorage.getItem('token');
-        axios
-            .get('http://localhost:3000/api/admin/users', {
+        axiosInstance
+            .get('/admin/users', {
                 headers: {
                     Authorization: `Bearer ${token}`, // Attach the token
                 },
@@ -82,7 +89,7 @@ export default {
 
     async addUser() {
       try {
-        await axios.post('/admin/users', this.newUser, {
+        await axiosInstance.post('/admin/users', this.newUser, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         this.closeAddUserModal();
@@ -93,7 +100,7 @@ export default {
     },
     async deleteUser(userId) {
       try {
-        await axios.delete(`/admin/users/${userId}`, {
+        await axiosInstance.delete(`/admin/users/${userId}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         this.fetchUsers();
@@ -103,7 +110,7 @@ export default {
     },
     async toggleAdmin(userId, isAdmin) {
         try {
-            await axios.patch(
+            await axiosInstance.patch(
                 `/admin/users/${userId}`,
                 { admin: isAdmin ? 1 : 0 },
                 {

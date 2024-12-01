@@ -1,0 +1,59 @@
+{
+  "quizz": [
+    {
+      "question": "Which cheese is described as having a nutty, buttery flavor with a fruity finish?",
+      "reponses": [
+        {
+          "reponse": "Comté",
+          "correct": true
+        },
+        {
+          "reponse": "Fourme d'Ambert",
+          "correct": false
+        },
+        {
+          "reponse": "Bûche de Chèvre",
+          "correct": false
+        },
+        {
+          "reponse": "Munster",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Which cheese has a texture described as creamy and slightly crumbly, with a mild flavor and a hint of spice?",
+      "reponses": [
+        {
+          "reponse": "Fourme d'Ambert",
+          "correct": true
+        },
+        {
+          "reponse": "Roquefort",
+          "correct": false
+        },
+        {
+          "reponse": "Reblochon",
+          "correct": false
+        },
+        {
+          "reponse": "Ossau-Iraty",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Oui ou non ?",
+      "reponses": [
+        {
+          "reponse": "OUI",
+          "correct": true
+        },
+        {
+          "reponse": "NON",
+          "correct": false
+        }
+      ]
+    }
+  ]
+}

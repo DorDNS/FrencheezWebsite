@@ -1,5 +1,25 @@
 <template>
+  <div class="title-container">
+    <h1>My Progress</h1>
+  </div>
+  
   <div class="my-progress">
+    <div class="profile-section">
+      <div class="user-info">
+        <p><strong>{{ userName }}</strong></p>
+      </div>
+    </div>
+    <div class="level-section">
+      <div class="level-left">
+        <span class="level-label">LEVEL</span>
+        <span class="level-value">{{ userLevel }}</span>
+      </div>
+      <div class="level-right">
+        <span class="level-cheese">{{ cheeseForLevel }}</span>
+      </div>
+    </div>
+
+
     <div class="favorites-section">
       <h2>My Favorite Cheeses</h2>
       <div class="favorites-list">
@@ -14,6 +34,22 @@
         </div>
       </div>
     </div>
+
+    <div class="knowledge-section">
+      <h2>My Knowledge</h2>
+      <div class="badge-list">
+        <div
+          v-for="quiz in quizzes"
+          :key="quiz.id"
+          class="badge-item"
+          :class="{ unlocked: userScores[quiz.id] === quiz.maxScore }"
+        >
+          <img :src="quiz.icon" :alt="`${quiz.name} Badge`" />
+          <span>{{ quiz.name }}</span>
+        </div>
+      </div>
+    </div>
+
     <button v-if="isAdmin" @click="goToAdminPage" class="manage-button">Manage Website</button>
     <button @click="goToEditProfile" class="edit-profile-button">Edit Profile</button>
     <button @click="logout" class="logout-button">Log Out</button>
@@ -27,28 +63,64 @@ export default {
   name: "MyProgress",
   data() {
     return {
-      favoriteCheeses: [], // Store favorite cheeses
-      isAdmin: false, // Store admin status
+      favoriteCheeses: [],
+      userScores: {},
+      quizzes: [
+        { id: "basic-knowledge", name: "Basic Knowledge", icon: "/images/badge-basic.png", maxScore: 10 },
+        { id: "tasting-cheese", name: "Tasting Cheese", icon: "/images/badge-tasting.png", maxScore: 10 },
+        { id: "pairing-cheese", name: "Pairing Cheese", icon: "/images/badge-pairing.png", maxScore: 10 },
+      ],
+      isAdmin: false,
+      userLevel: 1,
+      userName: "",
     };
   },
+  computed: {
+    cheeseForLevel() {
+      const cheeseNames = ["EMMENTAL", "COMTÉ", "CAMEMBERT", "BLEU"];
+      return cheeseNames[this.userLevel - 1] || "Emmental";
+    },
+  },
   methods: {
-    logout() {
+    async logout() {
       localStorage.removeItem("token");
       this.$router.push("/login");
     },
     async fetchFavorites() {
       try {
-        // Fetch favorite cheeses
         const response = await axios.get("/favorites");
-        console.log(response.data); // Debugging step
-        this.favoriteCheeses = response.data; // Expecting cheese_id, name, and image_path
+        this.favoriteCheeses = response.data;
 
-        // Fetch user data to check if they are admin
         const userResponse = await axios.get("/user");
-        this.isAdmin = parseInt(userResponse.data.admin, 10) === 1; // Convert admin to integer and compare
-        console.log(userResponse.data)
+        this.isAdmin = parseInt(userResponse.data.admin, 10) === 1;
+        this.userName = userResponse.data.full_name || userResponse.data.username;
       } catch (error) {
         console.error("Error fetching favorite cheeses or user data:", error);
+      }
+    },
+    async fetchScores() {
+      try {
+        const quizDetails = await Promise.all(
+          this.quizzes.map((quiz) =>
+            axios.get(`/quiz/${quiz.id}`).then((response) => {
+              quiz.maxScore = response.data.quizz.length;
+              return quiz;
+            })
+          )
+        );
+
+        await Promise.all(
+          quizDetails.map((quiz) =>
+            axios.get(`/quiz/${quiz.id}/best-score`).then((response) => {
+              this.userScores[quiz.id] = response.data.best_score || 0;
+            })
+          )
+        );
+
+        const unlockedBadges = quizDetails.filter((quiz) => this.userScores[quiz.id] >= quiz.maxScore).length;
+        this.userLevel = Math.min(unlockedBadges + 1, 4);
+      } catch (error) {
+        console.error("Error fetching quiz scores or details:", error);
       }
     },
     goToCheeseInfo(cheeseId) {
@@ -61,11 +133,14 @@ export default {
       this.$router.push("/edit-profile");
     },
   },
-  created() {
-    this.fetchFavorites(); // Fetch favorite cheeses on load
+  async created() {
+    await this.fetchFavorites();
+    await this.fetchScores();
   },
 };
+
 </script>
+
 
 <style scoped>
 .my-progress {
@@ -112,8 +187,8 @@ export default {
   width: 300px;
   height: 50px;
   font-size: 1.5rem;
-  color: #DAA520; /* Dark yellow text for contrast */
-  background-color: #FFFACD; /* Lighter yellow background */
+  color: #DAA520;
+  background-color: #FFFACD;
   border: none;
   border-radius: 40px;
   font-family: "Rubik", sans-serif;
@@ -125,14 +200,84 @@ export default {
 }
 
 .manage-button:hover {
-  background-color: #FFECB3; /* Slightly darker shade of light yellow on hover */
+  background-color: #FFECB3;
   transform: scale(1.02);
 }
 
-.manage-button:active {
-  background-color: #FFE4B5; /* A deeper light yellow for active state */
+.knowledge-section,
+.favorites-section {
+  margin-top: 20px;
+}
+
+.knowledge-section h2,
+.favorites-section h2 {
+  font-size: 1.8rem;
+  font-family: "Rubik", sans-serif;
+  color: #575dce;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.badge-list {
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Espacement entre les badges */
+  margin-top: 20px; /* Espacement supérieur */
+  margin-bottom: 40px;
+}
+
+.badge-item {
+  text-align: center; /* Centre le texte sous l'icône */
+}
+
+.badge-item img {
+  width: 80px; /* Augmente la largeur de l'image */
+  height: 80px; /* Augmente la hauteur de l'image */
+  opacity: 0.5; /* Icône grisée par défaut */
+  transition: opacity 0.3s ease;
+}
+
+.badge-item.unlocked img {
+  opacity: 1; /* Icône entièrement visible si débloquée */
+}
+
+.badge-item span {
+  display: block; /* Le titre passe sur une nouvelle ligne */
+  margin-top: 10px; /* Espacement entre l'icône et le texte */
+  font-size: 1.2rem; /* Taille du texte */
+  font-weight: bold; /* Texte en gras */
+  color: #333; /* Couleur du texte */
+  font-family: "Rubik", sans-serif;
+}
+
+.edit-profile-button {
+  display: block;
+  margin: 10px auto;
+  width: 300px;
+  height: 50px;
+  font-size: 1.5rem;
+  color: #0056b3;
+  background-color: #cce5ff;
+  border: none;
+  border-radius: 40px;
+  font-family: "Rubik", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-profile-button:hover {
+  background-color: #b3d7ff;
+  transform: scale(1.02);
+}
+
+.edit-profile-button:active {
+  background-color: #99c9ff;
   transform: scale(0.98);
 }
+
 
 .favorites-section {
   margin-top: 20px;
@@ -183,31 +328,105 @@ export default {
   font-family: "Rubik", sans-serif;
 }
 
-.edit-profile-button {
-  display: block;
-  margin: 10px auto;
-  width: 300px;
-  height: 50px;
-  font-size: 1.5rem;
-  color: #0056b3; /* Stronger blue text */
-  background-color: #cce5ff; /* Light blue background */
-  border: none;
-  border-radius: 40px;
+
+.title-container {
+display: flex;
+align-items: center;
+position: relative;
+margin-bottom: 20px;
+width: 100%;
+}
+
+.title-container h1 {
+font-family: 'Rubik', sans-serif;
+font-weight: 500;
+font-size: 3rem;
+color: #575dce;
+background-color: #f5f3e7;
+padding: 0 15px; 
+margin-left: 10%; 
+z-index: 1;
+}
+
+.title-container::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 0;
+right: 0;
+height: 1px; 
+background-color: black; 
+z-index: 0;
+}
+.title-container {
+display: flex;
+align-items: center;
+position: relative;
+margin-bottom: 20px;
+width: 100%;
+}
+
+.title-container h1 {
+font-family: 'Rubik', sans-serif;
+font-weight: 500;
+font-size: 3rem;
+color: #575dce; /* Violet correspondant au style */
+background-color: #f5f3e7; /* Fond clair */
+padding: 0 15px;
+margin-left: 10%;
+z-index: 1;
+}
+
+.title-container::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 0;
+right: 0;
+height: 1px;
+background-color: black;
+z-index: 0;
+}
+
+.level-section {
+  display: flex;
+  justify-content: space-between; /* Aligne les éléments aux extrémités */
+  align-items: center;
+  margin: 20px 0;
+  background-color: #f8e5c1;
+  border-radius: 0px;
+  padding: 10px 20px;
   font-family: "Rubik", sans-serif;
+}
+
+.level-left {
+  display: flex;
+  align-items: center;
+}
+
+.level-label {
+  font-size: 1.2rem;
   font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: #333;
+  margin-right: 10px;
 }
 
-.edit-profile-button:hover {
-  background-color: #b3d7ff; /* Slightly darker shade of light blue on hover */
-  transform: scale(1.02);
+.level-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0056b3;
+  background-color: #cce5ff;
+  border-radius: 50%;
+  padding: 5px 15px;
+  margin-left: 10px;
 }
 
-.edit-profile-button:active {
-  background-color: #99c9ff; /* Even darker shade of light blue on active */
-  transform: scale(0.98);
+.level-right {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  text-align: right;
 }
+
+
 </style>
