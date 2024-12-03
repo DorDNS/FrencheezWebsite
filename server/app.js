@@ -212,3 +212,29 @@ app.put('/api/user/profile', authMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Failed to update profile' });
     }
 });
+
+app.get("/api/user/progress", authMiddleware, (req, res) => {
+    const userId = req.user.id;
+    const query = `
+      SELECT 
+        u.full_name, 
+        u.username, 
+        p.progress_percentage 
+      FROM Users u
+      JOIN UserProgress p ON u.id = p.user_id
+      WHERE u.id = ?;
+    `;
+    db.query(query, [userId], (err, results) => {
+      if (err) {
+        console.error("Error fetching user progress:", err);
+        res.status(500).json({ error: "Internal server error" });
+        return;
+      }
+      if (results.length === 0) {
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+      res.json(results[0]);
+    });
+});
+  

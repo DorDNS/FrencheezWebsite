@@ -5,8 +5,22 @@
   
   <div class="my-progress">
     <div class="profile-section">
-      <div class="user-info">
-        <p><strong>{{ userName }}</strong></p>
+      <div class="circular-progress">
+        <svg viewBox="0 0 36 36" class="circular-chart green">
+          <path class="circle-bg"
+                d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+          <path class="circle"
+                :stroke-dasharray="`${progress}, 100`"
+                d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+        </svg>
+      </div>
+      <div class="user-details">
+        <h2 class="full-name">{{ userName }}</h2>
+        <p class="username">@{{ username }}</p>
       </div>
     </div>
     <div class="level-section">
@@ -73,6 +87,7 @@ export default {
       isAdmin: false,
       userLevel: 1,
       userName: "",
+      username: "",
     };
   },
   computed: {
@@ -98,6 +113,53 @@ export default {
         console.error("Error fetching favorite cheeses or user data:", error);
       }
     },
+    async fetchUserProgress() {
+      try {
+        const response = await axios.get("/user/progress", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        this.userName = response.data.full_name || "Unknown User";
+        this.username = response.data.username || "unknown";
+        this.progressPercentage = response.data.progress_percentage || 0;
+
+        // Update progress bar
+        this.updateProgressCircle();
+      } catch (error) {
+        console.error("Error fetching user progress:", error);
+      }
+    },
+
+    updateProgressCircle() {
+      this.$nextTick(() => { // Ensure the DOM is updated
+      const circle = document.querySelector(".circle");
+      if (!circle) {
+        console.error("Circle element not found!");
+        return;
+      }
+
+      const radius = 15.9155; // Based on the SVG's path dimensions
+      const circumference = 2 * Math.PI * radius;
+
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      const offset = circumference - (this.progressPercentage / 100) * circumference;
+      circle.style.strokeDashoffset = offset;
+    });
+    },
+
+    calculateDasharray() {
+    const radius = 15.9155; // Based on SVG dimensions
+    const circumference = 2 * Math.PI * radius;
+
+    // Calculate progress offset
+    const progressOffset = (this.progressPercentage / 100) * circumference;
+
+    // Ensure a visible dot at 0%
+    const minOffset = 2; // Small visible dot size
+    return `${Math.max(progressOffset, minOffset)}, ${circumference}`;
+    },
+
     async fetchScores() {
       try {
         const quizDetails = await Promise.all(
@@ -136,6 +198,7 @@ export default {
   async created() {
     await this.fetchFavorites();
     await this.fetchScores();
+    await this.fetchUserProgress();
   },
 };
 
@@ -428,5 +491,59 @@ z-index: 0;
   text-align: right;
 }
 
+.profile-section {
+  display: flex;
+  align-items: center; /* Vertically align progress chart and user details */
+  justify-content: center; /* Center the group horizontally */
+  gap: 20px; /* Space between the progress chart and user details */
+  height: auto; /* Remove the extra height */
+  padding: 20px 0; /* Add minimal padding for spacing above and below */
+}
+
+.circular-progress {
+  width: 200px; /* Adjust the size of the progress bar */
+  height: 200px;
+  position: relative;
+}
+
+.circular-chart {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 3.8;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 3.8;
+  stroke: #4caf50;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.35s ease;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column; /* Stack full name and username vertically */
+  align-items: flex-start; /* Align text to the left */
+  text-align: left;
+}
+
+.full-name {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.username {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #666;
+  font-style: italic;
+}
 
 </style>
