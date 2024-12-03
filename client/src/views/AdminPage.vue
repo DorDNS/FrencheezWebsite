@@ -1,31 +1,33 @@
 <template>
   <div class="admin-page">
-    <h1>Admin Panel</h1>
-    <div class="admin-cards">
-      <!-- Carte : Gestion des utilisateurs -->
-      <div
-        v-for="(card, index) in adminCards"
-        :key="index"
-        class="admin-card"
-        @click="navigateTo(card.route)"
-      >
-        <img :src="card.icon" alt="Card Icon" />
-        <h3>{{ card.title }}</h3>
-        <p>{{ card.description }}</p>
-      </div>
+    <div class="white-background">
+      <h1>Admin Panel</h1>
+      <div class="admin-cards">
+        <!-- Carte : Gestion des utilisateurs -->
+        <div
+          v-for="(card, index) in adminCards"
+          :key="index"
+          class="admin-card"
+          @click="navigateTo(card.route)"
+        >
+          <img :src="card.icon" alt="Card Icon" />
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+        </div>
 
-      <!-- Carte : Gestion des fromages -->
-      <div class="admin-card" @click="$router.push({ name: 'CheesesList' })">
-        <img src="/images/cheese-icon.png" alt="Cheese Icon" />
-        <h3>Manage Cheeses</h3>
-        <p>Manage the list of cheeses.</p>
-      </div>
+        <!-- Carte : Gestion des fromages -->
+        <div class="admin-card" @click="$router.push({ name: 'CheesesList' })">
+          <img src="/images/cheese-icon.png" alt="Cheese Icon" />
+          <h3>Manage Cheeses</h3>
+          <p>Manage the list of cheeses.</p>
+        </div>
 
-      <!-- Nouvelle carte : Gestion des quiz -->
-      <div class="admin-card" @click="$router.push({ name: 'EditQuizzes' })">
-        <img src="/images/quiz-icon.png" alt="Quiz Icon" />
-        <h3>Manage Quizzes</h3>
-        <p>Add, edit, or delete quiz questions.</p>
+        <!-- Nouvelle carte : Gestion des quiz -->
+        <div class="admin-card" @click="$router.push({ name: 'EditQuizzes' })">
+          <img src="/images/quiz-icon.png" alt="Quiz Icon" />
+          <h3>Manage Quizzes</h3>
+          <p>Add, edit, or delete quiz questions.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -58,28 +60,35 @@ export default {
 .admin-page {
   max-width: 900px;
   margin: 20px auto;
-  padding: 20px;
   font-family: "Rubik", sans-serif;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+}
+
+/* Conteneur blanc */
+.white-background {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .admin-cards {
   display: flex;
+  justify-content: center;
   gap: 20px;
-  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
 .admin-card {
   flex: 1;
+  max-width: 200px;
   padding: 15px;
   background-color: #f9f9f9;
   border-radius: 8px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-grow: 1;
 }
 
 .admin-card:hover {
@@ -90,5 +99,29 @@ export default {
 .admin-card img {
   max-width: 50px;
   margin-bottom: 10px;
+}
+
+.admin-card h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: black;
+  text-transform: capitalize;
+}
+
+.admin-card p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Media query for small screens */
+@media (max-width: 768px) {
+  .admin-cards {
+    flex-direction: column;
+  }
+
+  .admin-card {
+    max-width: 100%;
+  }
 }
 </style>

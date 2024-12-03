@@ -1,47 +1,52 @@
 <template>
   <div class="user-management-page">
-    <h1>User Management</h1>
-    <div class="user-grid">
-      <div
-        v-for="user in users"
-        :key="user.id"
-        class="user-card"
-        @click="selectUser(user)"
-      >
-        <h4>{{ user.username }}</h4>
-        <p><strong>Full Name:</strong> {{ user.full_name }}</p>
-        <p><strong>Admin:</strong> {{ user.admin ? 'Yes' : 'No' }}</p>
+    <div class="white-background">
+      <h1>User Management</h1>
+      <button @click="goToAdminPanel" class="back-to-admin-panel">
+        Back to Admin Panel
+      </button>
+      <div class="user-grid">
+        <div
+          v-for="user in users"
+          :key="user.id"
+          class="user-card"
+          @click="selectUser(user)"
+        >
+          <h4>{{ user.username }}</h4>
+          <p><strong>Full Name:</strong> {{ user.full_name }}</p>
+          <p><strong>Admin:</strong> {{ user.admin ? 'Yes' : 'No' }}</p>
+        </div>
+        <div class="user-card add-user-card" @click="openAddUserModal">
+          <span class="plus-icon">+</span>
+        </div>
       </div>
-      <div class="user-card add-user-card" @click="openAddUserModal">
-        <span class="plus-icon">+</span>
-      </div>
-    </div>
 
-    <!-- Modal for Adding a New User -->
-    <div v-if="showAddUserModal" class="modal">
-      <div class="modal-content">
-        <h3>Add New User</h3>
-        <form @submit.prevent="addUser">
-          <input v-model="newUser.full_name" placeholder="Full Name" required />
-          <input v-model="newUser.username" placeholder="Username" required />
-          <input v-model="newUser.password" type="password" placeholder="Password" required />
-          <button type="submit">Add User</button>
-          <button type="button" @click="closeAddUserModal">Cancel</button>
-        </form>
+      <!-- Modal for Adding a New User -->
+      <div v-if="showAddUserModal" class="modal">
+        <div class="modal-content">
+          <h3>Add New User</h3>
+          <form @submit.prevent="addUser">
+            <input v-model="newUser.full_name" placeholder="Full Name" required />
+            <input v-model="newUser.username" placeholder="Username" required />
+            <input v-model="newUser.password" type="password" placeholder="Password" required />
+            <button type="submit">Add User</button>
+            <button type="button" @click="closeAddUserModal">Cancel</button>
+          </form>
+        </div>
       </div>
-    </div>
 
-    <!-- Modal for Viewing User Details -->
-    <div v-if="selectedUser" class="modal">
-      <div class="modal-content">
-        <h3>User Details</h3>
-        <p><strong>Full Name:</strong> {{ selectedUser.full_name }}</p>
-        <p><strong>Username:</strong> {{ selectedUser.username }}</p>
-        <button @click="toggleAdmin(selectedUser.id, !selectedUser.admin)">
-          {{ selectedUser.admin ? 'Remove Admin' : 'Make Admin' }}
-        </button>
-        <button @click="deleteUser(selectedUser.id)">Delete User</button>
-        <button @click="closeUserDetailsModal">Close</button>
+      <!-- Modal for Viewing User Details -->
+      <div v-if="selectedUser" class="modal">
+        <div class="modal-content">
+          <h3>User Details</h3>
+          <p><strong>Full Name:</strong> {{ selectedUser.full_name }}</p>
+          <p><strong>Username:</strong> {{ selectedUser.username }}</p>
+          <button @click="toggleAdmin(selectedUser.id, !selectedUser.admin)">
+            {{ selectedUser.admin ? 'Remove Admin' : 'Make Admin' }}
+          </button>
+          <button @click="deleteUser(selectedUser.id)">Delete User</button>
+          <button @click="closeUserDetailsModal">Close</button>
+        </div>
       </div>
     </div>
   </div>
@@ -145,6 +150,9 @@ export default {
       this.showAddUserModal = false;
       this.newUser = { full_name: '', username: '', password: '' };
     },
+    goToAdminPanel() {
+      this.$router.push('/admin');
+    },
   },
   created() {
     this.fetchUsers();
@@ -156,11 +164,35 @@ export default {
 .user-management-page {
   max-width: 900px;
   margin: 20px auto;
-  padding: 20px;
   font-family: 'Rubik', sans-serif;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+}
+
+/* Conteneur blanc */
+.white-background {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-admin-panel {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #5f4b8b;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-to-admin-panel:hover {
+  background-color: #4a3b6d;
+  transform: scale(1.05);
 }
 
 .user-grid {

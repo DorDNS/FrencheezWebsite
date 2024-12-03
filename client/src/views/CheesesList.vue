@@ -1,6 +1,10 @@
 <template>
   <div class="cheeses-list-page">
+    <div class="white-background">
     <h1>Cheeses List</h1>
+    <button @click="goToAdminPanel" class="back-to-admin-panel">
+      Back to Admin Panel
+    </button>
     <div class="cheese-grid">
       <div
         v-for="cheese in cheeses"
@@ -145,6 +149,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -234,6 +239,9 @@ export default {
         .catch(error => {
           console.error('Error deleting cheese:', error);
         });
+    },
+    goToAdminPanel() {
+      this.$router.push('/admin');
     }
   },
   created() {
@@ -246,11 +254,35 @@ export default {
 .cheeses-list-page {
   max-width: 900px;
   margin: 20px auto;
-  padding: 20px;
   font-family: 'Rubik', sans-serif;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+}
+
+/* Conteneur blanc */
+.white-background {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-admin-panel {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #5f4b8b;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-to-admin-panel:hover {
+  background-color: #4a3b6d;
+  transform: scale(1.05);
 }
 
 .cheese-grid {
@@ -308,9 +340,9 @@ export default {
 
 .modal-content {
   background: #ffffff;
-  padding: 15px; /* Réduit le padding pour rendre la modale plus compacte */
+  padding: 15px;
   border-radius: 8px;
-  width: 600px; /* Augmente la largeur de la modale pour deux colonnes */
+  width: 600px;
 }
 
 .form-grid {
@@ -327,23 +359,29 @@ export default {
 .modal-content label {
   font-size: 0.9rem;
   color: #333;
-  margin-bottom: 2px; /* Réduit l'espacement entre le label et le champ */
+  margin-bottom: 2px;
 }
 
 .modal-content input {
-  margin-bottom: 8px; /* Réduit l'espacement après chaque champ */
-  padding: 5px; /* Réduit le padding des champs de texte */
-  font-size: 0.9rem; /* Réduit la taille de la police des champs de texte */
+  margin-bottom: 8px;
+  padding: 5px;
 }
 
 .form-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .modal-content button {
-  padding: 8px; /* Réduit le padding des boutons */
-  font-size: 0.9rem; /* Réduit la taille de la police des boutons */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+  background-color: #ddd;
 }
 </style>

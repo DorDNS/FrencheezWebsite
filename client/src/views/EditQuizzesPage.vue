@@ -5,6 +5,9 @@
       <!-- Étape 1 : Sélection du quiz -->
       <div v-if="!selectedQuiz" class="quiz-selection">
         <h1>Edit Quizzes</h1>
+        <button @click="goToAdminPanel" class="back-to-admin-panel">
+        Back to Admin Panel
+        </button>
         <div class="admin-cards">
           <div
             v-for="quiz in quizzes"
@@ -173,6 +176,9 @@ export default {
         alert("Failed to save quiz. Please try again later.");
       }
     },
+    goToAdminPanel() {
+      this.$router.push('/admin');
+    },
   },
   mounted() {
     this.fetchQuizzes();
@@ -196,6 +202,26 @@ export default {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.back-to-admin-panel {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #5f4b8b;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-to-admin-panel:hover {
+  background-color: #4a3b6d;
+  transform: scale(1.05);
+}
+
 /* Cartes de sélection */
 .admin-cards {
   display: flex;
@@ -214,6 +240,7 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-grow: 1;
 }
 
 .admin-card:hover {
@@ -237,6 +264,17 @@ export default {
 .admin-card p {
   font-size: 14px;
   color: #666;
+}
+
+/* Media query for small screens */
+@media (max-width: 768px) {
+  .admin-cards {
+    flex-direction: column;
+  }
+
+  .admin-card {
+    max-width: 100%;
+  }
 }
 
 /* Section d'édition */

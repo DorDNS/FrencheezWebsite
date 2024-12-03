@@ -1,5 +1,8 @@
 <template>
   <div class="cheese-info-card">
+    <button @click="goBack" class="back-to-hall-of-fame">
+      Back to Hall of Fame
+    </button>
     <img :src="`http://localhost:3000${cheese.image_path}`" class="cheese-image" :alt="cheese.name" />
     <h1 class="cheese-name">{{ cheese.name }}</h1>
 
@@ -57,6 +60,11 @@ export default {
       .catch(error => {
         console.error("There was an error fetching the cheese data:", error);
       });
+  },
+  methods: {
+    goBack() {
+      this.$router.push('/hall-of-fame');
+    }
   }
 };
 </script>
@@ -117,6 +125,26 @@ padding-left: 20px;
 font-size: 1rem;
 color: #333;
 margin-bottom: 8px; /* Increased space between bullet points */
+}
+
+.back-to-hall-of-fame {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #5f4b8b;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-to-hall-of-fame:hover {
+  background-color: #4a3b6d;
+  transform: scale(1.05);
 }
 
 /* Add media query for mobile view */

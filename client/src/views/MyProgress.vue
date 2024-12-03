@@ -1,8 +1,8 @@
 <template>
+  <div class="progress-page">
   <div class="title-container">
     <h1>My Progress</h1>
   </div>
-  
   <div class="my-progress">
     <div class="profile-section">
       <div class="circular-progress">
@@ -68,6 +68,7 @@
     <button @click="goToEditProfile" class="edit-profile-button">Edit Profile</button>
     <button @click="logout" class="logout-button">Log Out</button>
   </div>
+</div>
 </template>
 
 <script>
@@ -350,7 +351,7 @@ export default {
   font-size: 1.8rem;
   font-family: "Rubik", sans-serif;
   color: #575dce;
-  text-align: center;
+  text-align: left;
   margin-bottom: 15px;
 }
 
@@ -421,35 +422,36 @@ height: 1px;
 background-color: black; 
 z-index: 0;
 }
+
 .title-container {
-display: flex;
-align-items: center;
-position: relative;
-margin-bottom: 20px;
-width: 100%;
-}
-
-.title-container h1 {
-font-family: 'Rubik', sans-serif;
-font-weight: 500;
-font-size: 3rem;
-color: #575dce; /* Violet correspondant au style */
-background-color: #f5f3e7; /* Fond clair */
-padding: 0 15px;
-margin-left: 10%;
-z-index: 1;
-}
-
-.title-container::before {
-content: '';
-position: absolute;
-top: 50%;
-left: 0;
-right: 0;
-height: 1px;
-background-color: black;
-z-index: 0;
-}
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+   
+  .title-container h1 {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 3rem;
+    color: #575dce;
+    background-color: #f5f3e7;
+    padding: 0 15px;
+    margin-left: 10%;
+    z-index: 1;
+  }
+   
+  .title-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: black;
+    z-index: 0;
+  }
 
 .level-section {
   display: flex;
@@ -545,5 +547,11 @@ z-index: 0;
   color: #666;
   font-style: italic;
 }
+
+.progress-page {
+    max-width: 100%;
+    margin: auto;
+    padding: 20px;
+  }
 
 </style>
