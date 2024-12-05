@@ -258,10 +258,10 @@ h1 {
 }
 
 .cheese-image {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  margin-top: 10px;
+  object-fit: cover;
   margin-bottom: 10px;
 }
 

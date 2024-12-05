@@ -29,8 +29,10 @@
             <input v-model="newUser.full_name" placeholder="Full Name" required />
             <input v-model="newUser.username" placeholder="Username" required />
             <input v-model="newUser.password" type="password" placeholder="Password" required />
-            <button type="submit">Add User</button>
-            <button type="button" @click="closeAddUserModal">Cancel</button>
+            <div class="form-actions">
+              <button type="submit">Add User</button>
+              <button type="button" @click="closeAddUserModal">Cancel</button>
+            </div>
           </form>
         </div>
       </div>
@@ -41,11 +43,13 @@
           <h3>User Details</h3>
           <p><strong>Full Name:</strong> {{ selectedUser.full_name }}</p>
           <p><strong>Username:</strong> {{ selectedUser.username }}</p>
-          <button @click="toggleAdmin(selectedUser.id, !selectedUser.admin)">
-            {{ selectedUser.admin ? 'Remove Admin' : 'Make Admin' }}
-          </button>
-          <button @click="deleteUser(selectedUser.id)">Delete User</button>
-          <button @click="closeUserDetailsModal">Close</button>
+          <div class="form-actions">
+            <button @click="toggleAdmin(selectedUser.id, !selectedUser.admin)">
+              {{ selectedUser.admin ? 'Remove Admin' : 'Make Admin' }}
+            </button>
+            <button @click="deleteUser(selectedUser.id)">Delete User</button>
+            <button @click="closeUserDetailsModal">Close</button>
+          </div>
         </div>
       </div>
     </div>
@@ -251,5 +255,23 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.modal-content button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+  background-color: #ddd;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espace entre les boutons */
 }
 </style>
