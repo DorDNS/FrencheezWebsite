@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const authRoutes = require('./authRoutes');
-const { authMiddleware } = require('./authMiddleware');
+const { authMiddleware, adminMiddleware } = require('./authMiddleware');
 const db = require('./db');
 const favoriteRoutes = require('./favorites');
 const adminRoutes = require('./adminRoutes');
@@ -68,7 +68,7 @@ app.get('/api/cheeses', authMiddleware, (req, res) => {
     });
 });
 
-// Protected route: Get a single cheese by ID (requires authentication)
+// Get a single cheese by ID (requires authentication)
 app.get('/api/cheeses/:id', authMiddleware, (req, res) => {
     const cheeseId = req.params.id;
     const sql = 'SELECT * FROM CheeseInfo WHERE id = ?';
@@ -92,7 +92,7 @@ app.get('/api/user', authMiddleware, (req, res) => {
 });
 
 // Add a new cheese
-app.post('/api/cheeses', authMiddleware, upload.single('image'), (req, res) => {
+app.post('/api/cheeses', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
     const { name, region, type, milk_type, aging_period, flavor_profile, texture, serving_temperature, wine_pairing, bread_pairing, fruit_pairing } = req.body;
     const image_path = req.file ? `/uploads/${req.file.filename}` : null;
     const sql = 'INSERT INTO CheeseInfo (name, region, type, milk_type, aging_period, flavor_profile, texture, serving_temperature, wine_pairing, bread_pairing, fruit_pairing, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -106,7 +106,7 @@ app.post('/api/cheeses', authMiddleware, upload.single('image'), (req, res) => {
 });
 
 // Update a cheese
-app.put('/api/cheeses/:id', authMiddleware, upload.single('image'), (req, res) => {
+app.put('/api/cheeses/:id', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
     const { id } = req.params;
     const { name, region, type, milk_type, aging_period, flavor_profile, texture, serving_temperature, wine_pairing, bread_pairing, fruit_pairing } = req.body;
     let sql = 'UPDATE CheeseInfo SET name = ?, region = ?, type = ?, milk_type = ?, aging_period = ?, flavor_profile = ?, texture = ?, serving_temperature = ?, wine_pairing = ?, bread_pairing = ?, fruit_pairing = ?';
@@ -128,7 +128,7 @@ app.put('/api/cheeses/:id', authMiddleware, upload.single('image'), (req, res) =
 });
 
 // Delete a cheese
-app.delete('/api/cheeses/:id', authMiddleware, (req, res) => {
+app.delete('/api/cheeses/:id', authMiddleware, adminMiddleware, (req, res) => {
     const { id } = req.params;
     const sql = 'DELETE FROM CheeseInfo WHERE id = ?';
     db.query(sql, [id], (err) => {
