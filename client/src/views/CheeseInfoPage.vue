@@ -76,16 +76,18 @@ margin: 20px auto;
 padding: 20px;
 border: 1px solid #E0E0E0;
 border-radius: 8px;
-background-color: #FFFFFF; /* Set to white background */
+background-color: #FFFFFF; 
 font-family: 'Rubik', sans-serif;
 }
 
 .cheese-image {
-width: 200px;
-height: 200px;
-border-radius: 50%;
-display: block;
-margin: 0 auto 20px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 20px;
+  object-fit: cover; 
+  object-position: center; 
 }
 
 .cheese-name {
