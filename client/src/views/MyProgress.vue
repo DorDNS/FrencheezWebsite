@@ -21,6 +21,7 @@
       <div class="user-details">
         <h2 class="full-name">{{ userName }}</h2>
         <p class="username">@{{ username }}</p>
+        <p class="description">{{ description }}</p>
       </div>
     </div>
     <div class="level-section">
@@ -89,6 +90,7 @@ export default {
       userLevel: 1,
       userName: "",
       username: "",
+      description: "",
     };
   },
   computed: {
@@ -123,6 +125,7 @@ export default {
         });
         this.userName = response.data.full_name || "Unknown User";
         this.username = response.data.username || "unknown";
+        this.description = response.data.description || "No description provided";
         this.progressPercentage = response.data.progress_percentage || 0;
 
         // Update progress bar
@@ -529,9 +532,10 @@ z-index: 0;
 
 .user-details {
   display: flex;
-  flex-direction: column; /* Stack full name and username vertically */
-  align-items: flex-start; /* Align text to the left */
+  flex-direction: column;
+  align-items: flex-start;
   text-align: left;
+  max-width: 300px; 
 }
 
 .full-name {
@@ -545,6 +549,14 @@ z-index: 0;
   margin: 0;
   font-size: 1.2rem;
   color: #666;
+  font-style: italic;
+}
+
+.description {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #333;
+  font-family: "Rubik", sans-serif;
   font-style: italic;
 }
 

@@ -219,6 +219,7 @@ app.get("/api/user/progress", authMiddleware, (req, res) => {
       SELECT 
         u.full_name, 
         u.username, 
+        u.description,
         p.progress_percentage 
       FROM Users u
       JOIN UserProgress p ON u.id = p.user_id
