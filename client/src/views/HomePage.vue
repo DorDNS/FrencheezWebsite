@@ -106,6 +106,7 @@ export default {
 
 .hero-content .italic-intro {
   font-style: italic;
+  font-family: 'Leckerli One', cursive;
 }
 
 .hero-content p {

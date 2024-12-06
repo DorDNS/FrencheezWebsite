@@ -5,19 +5,19 @@
       "question": "Which wine pairs best with Brie cheese?",
       "reponses": [
         {
-          "reponse": "Chardonnay or Champagne",
-          "correct": true
+          "reponse": "Gewürztraminer",
+          "correct": false
         },
         {
           "reponse": "Sauternes or Port",
           "correct": false
         },
         {
-          "reponse": "White Burgundy or Vin Jaune",
-          "correct": false
+          "reponse": "Chardonnay or Champagne",
+          "correct": true
         },
         {
-          "reponse": "Gewürztraminer",
+          "reponse": "White Burgundy or Vin Jaune",
           "correct": false
         }
       ]
@@ -26,15 +26,162 @@
       "question": "What is a suitable wine pairing for Roquefort cheese?",
       "reponses": [
         {
-          "reponse": "Sauternes or Port",
-          "correct": true
-        },
-        {
           "reponse": "Merlot or Cabernet Sauvignon",
           "correct": false
         },
         {
+          "reponse": "Champagne or red Bordeaux",
+          "correct": false
+        },
+        {
           "reponse": "Red Burgundy",
+          "correct": false
+        },
+        {
+          "reponse": "Sauternes or Port",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question": "Which bread pairs best with Camembert cheese?",
+      "reponses": [
+        {
+          "reponse": "Whole grain bread",
+          "correct": false
+        },
+        {
+          "reponse": "Rustic bread",
+          "correct": false
+        },
+        {
+          "reponse": "Baguette",
+          "correct": true
+        },
+        {
+          "reponse": "Rye bread",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "What fruit pairing works well with Ossau-Iraty cheese?",
+      "reponses": [
+        {
+          "reponse": "Figs, apples",
+          "correct": false
+        },
+        {
+          "reponse": "Cherries, figs",
+          "correct": true
+        },
+        {
+          "reponse": "Strawberries, grapes",
+          "correct": false
+        },
+        {
+          "reponse": "Pears, hazelnuts",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Which bread is recommended with Saint-Nectaire cheese?",
+      "reponses": [
+        {
+          "reponse": "Rustic bread",
+          "correct": true
+        },
+        {
+          "reponse": "Crusty bread",
+          "correct": false
+        },
+        {
+          "reponse": "Whole grain bread",
+          "correct": false
+        },
+        {
+          "reponse": "Baguette",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "What wine pairs well with Munster cheese?",
+      "reponses": [
+        {
+          "reponse": "Gewürztraminer",
+          "correct": true
+        },
+        {
+          "reponse": "Pinot Noir",
+          "correct": false
+        },
+        {
+          "reponse": "Red Burgundy",
+          "correct": false
+        },
+        {
+          "reponse": "Sauternes or Port",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Which fruit pairing is best for Reblochon cheese?",
+      "reponses": [
+        {
+          "reponse": "Dried apricots, almonds",
+          "correct": false
+        },
+        {
+          "reponse": "Pears, figs",
+          "correct": true
+        },
+        {
+          "reponse": "Honey, fresh berries",
+          "correct": false
+        },
+        {
+          "reponse": "Grapes, hazelnuts",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Which cheese pairs with Rye bread?",
+      "reponses": [
+        {
+          "reponse": "Bleu d'Auvergne",
+          "correct": true
+        },
+        {
+          "reponse": "Pont-l'Évêque",
+          "correct": false
+        },
+        {
+          "reponse": "Saint-Marcellin",
+          "correct": false
+        },
+        {
+          "reponse": "Tomme de Savoie",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "What is the recommended wine pairing for Beaufort cheese?",
+      "reponses": [
+        {
+          "reponse": "Chardonnay or Vin Jaune",
+          "correct": true
+        },
+        {
+          "reponse": "Roussette de Savoie",
+          "correct": false
+        },
+        {
+          "reponse": "Sauternes or Port",
           "correct": false
         },
         {
@@ -44,26 +191,100 @@
       ]
     },
     {
-      "question": "C'est qui mon bebou préféré ?",
+      "question": "Which fruit pairs best with Cantal cheese?",
       "reponses": [
         {
-          "reponse": "Doryan",
-          "correct": false
-        },
-        {
-          "reponse": "Duryan",
-          "correct": false
-        },
-        {
-          "reponse": "Gaêl",
-          "correct": false
-        },
-        {
-          "reponse": "Calvigael",
+          "reponse": "Pears, hazelnuts",
           "correct": true
         },
         {
-          "reponse": "Crash ?",
+          "reponse": "Cherries, figs",
+          "correct": false
+        },
+        {
+          "reponse": "Dried apricots, almonds",
+          "correct": false
+        },
+        {
+          "reponse": "Figs, apples",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Munster cheese pairs well with Gewürztraminer wine.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": true
+        },
+        {
+          "reponse": "False",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Saint-Nectaire cheese pairs with Rye bread.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": false
+        },
+        {
+          "reponse": "False",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question": "Cantal cheese is best paired with pears and hazelnuts.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": true
+        },
+        {
+          "reponse": "False",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Bleu d'Auvergne pairs well with Sauternes or Port.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": true
+        },
+        {
+          "reponse": "False",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Beaufort cheese is traditionally paired with Roussette de Savoie wine.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": false
+        },
+        {
+          "reponse": "False",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question": "Reblochon cheese pairs well with pears and figs.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": true
+        },
+        {
+          "reponse": "False",
           "correct": false
         }
       ]

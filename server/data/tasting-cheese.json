@@ -4,19 +4,19 @@
       "question": "Which cheese is described as having a nutty, buttery flavor with a fruity finish?",
       "reponses": [
         {
-          "reponse": "Comté",
-          "correct": true
+          "reponse": "Munster",
+          "correct": false
         },
         {
-          "reponse": "Fourme d'Ambert",
-          "correct": false
+          "reponse": "Comté",
+          "correct": true
         },
         {
           "reponse": "Bûche de Chèvre",
           "correct": false
         },
         {
-          "reponse": "Munster",
+          "reponse": "Fourme d'Ambert",
           "correct": false
         }
       ]
@@ -24,6 +24,10 @@
     {
       "question": "Which cheese has a texture described as creamy and slightly crumbly, with a mild flavor and a hint of spice?",
       "reponses": [
+        {
+          "reponse": "Reblochon",
+          "correct": false
+        },
         {
           "reponse": "Fourme d'Ambert",
           "correct": true
@@ -33,25 +37,144 @@
           "correct": false
         },
         {
-          "reponse": "Reblochon",
-          "correct": false
-        },
-        {
           "reponse": "Ossau-Iraty",
           "correct": false
         }
       ]
     },
     {
-      "question": "Oui ou non ?",
+      "question": "What is the serving temperature for Brie cheese?",
       "reponses": [
         {
-          "reponse": "OUI",
+          "reponse": "Room temperature",
           "correct": true
         },
         {
-          "reponse": "NON",
+          "reponse": "Cold",
           "correct": false
+        },
+        {
+          "reponse": "Warm",
+          "correct": false
+        },
+        {
+          "reponse": "Frozen",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Munster cheese has a strong, pungent flavor with a spicy finish.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": true
+        },
+        {
+          "reponse": "False",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Saint-Nectaire has a texture described as firm and crystalline.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": false
+        },
+        {
+          "reponse": "False",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question": "Which cheese is served cold and has a tangy, earthy flavor with a slightly acidic finish?",
+      "reponses": [
+        {
+          "reponse": "Brillat-Savarin",
+          "correct": false
+        },
+        {
+          "reponse": "Camembert",
+          "correct": false
+        },
+        {
+          "reponse": "Bûche de Chèvre",
+          "correct": true
+        },
+        {
+          "reponse": "Saint-Marcellin",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Roquefort is typically served cold.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": true
+        },
+        {
+          "reponse": "False",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Which cheese is described as having a nutty, fruity flavor with a complex aroma?",
+      "reponses": [
+        {
+          "reponse": "Époisses",
+          "correct": false
+        },
+        {
+          "reponse": "Bleu d'Auvergne",
+          "correct": false
+        },
+        {
+          "reponse": "Beaufort",
+          "correct": true
+        },
+        {
+          "reponse": "Tomme des Pyrénées",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "What is the texture of Comté cheese?",
+      "reponses": [
+        {
+          "reponse": "Firm and slightly crystalline",
+          "correct": true
+        },
+        {
+          "reponse": "Soft and creamy",
+          "correct": false
+        },
+        {
+          "reponse": "Creamy and crumbly",
+          "correct": false
+        },
+        {
+          "reponse": "Sticky and creamy",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question": "Époisses cheese has a mild flavor with no aroma.",
+      "reponses": [
+        {
+          "reponse": "True",
+          "correct": false
+        },
+        {
+          "reponse": "False",
+          "correct": true
         }
       ]
     }

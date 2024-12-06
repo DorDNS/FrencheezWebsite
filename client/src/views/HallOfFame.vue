@@ -1,7 +1,7 @@
 <template>
   <div class="hall-of-fame" @click="closeFilterModal">
     <div class="title-container">
-      <h1>À la carte</h1>
+      <h1>Hall Of Fame</h1>
     </div>
     <div class="search-container">
       <input type="text" placeholder="Search..." v-model="searchQuery" />
@@ -210,7 +210,6 @@ export default {
 h1 {
   font-size: 3rem;
   color: #575dce;
-  margin-bottom: 20px;
 }
 
 .search-container {
