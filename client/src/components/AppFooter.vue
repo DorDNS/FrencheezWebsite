@@ -1,6 +1,10 @@
 <template>
   <footer class="footer">
-    <p class="footer-text">Made by Doryan Denis & Nicolas Papleux</p>
+    <div class="footer-content">
+      <p class="footer-text">
+        © 2024 Frencheez. Made by <strong>Doryan Denis</strong> & <strong>Nicolas Papleux</strong>.
+      </p>
+    </div>
   </footer>
 </template>
 
@@ -13,15 +17,25 @@ export default {
 <style scoped>
 .footer {
   background-color: #ddc8c8;
-  height: 90px;
+  padding: 20px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
 }
 
 .footer-text {
   font-family: 'Rubik', sans-serif;
-  font-size: 24px;
+  font-size: 16px;
   color: #2c2c27;
+  margin: 0;
 }
 </style>

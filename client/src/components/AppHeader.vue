@@ -45,7 +45,7 @@ export default {
 }
 
 .logo:hover {
-  color: rgb(10, 137, 201); /* Change color on hover */
+  color: #575dce; /* Change color on hover */
   transform: scale(1.05); /* Slightly enlarge on hover */
 }
 

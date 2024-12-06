@@ -76,7 +76,7 @@ margin: 20px auto;
 padding: 20px;
 border: 1px solid #E0E0E0;
 border-radius: 8px;
-background-color: #FFFFFF; 
+background-color: #FFFFFF; /* Set to white background */
 font-family: 'Rubik', sans-serif;
 }
 
