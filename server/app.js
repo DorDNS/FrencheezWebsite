@@ -10,6 +10,7 @@ const favoriteRoutes = require('./favorites');
 const adminRoutes = require('./adminRoutes');
 const quizRoutes = require('./quizRoutes');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -109,34 +110,108 @@ app.post('/api/cheeses', authMiddleware, adminMiddleware, upload.single('image')
 app.put('/api/cheeses/:id', authMiddleware, adminMiddleware, upload.single('image'), (req, res) => {
     const { id } = req.params;
     const { name, region, type, milk_type, aging_period, flavor_profile, texture, serving_temperature, wine_pairing, bread_pairing, fruit_pairing } = req.body;
-    let sql = 'UPDATE CheeseInfo SET name = ?, region = ?, type = ?, milk_type = ?, aging_period = ?, flavor_profile = ?, texture = ?, serving_temperature = ?, wine_pairing = ?, bread_pairing = ?, fruit_pairing = ?';
-    const params = [name, region, type, milk_type, aging_period, flavor_profile, texture, serving_temperature, wine_pairing, bread_pairing, fruit_pairing];
-    if (req.file) {
-        const image_path = `/uploads/${req.file.filename}`;
-        sql += ', image_path = ?';
-        params.push(image_path);
-    }
-    sql += ' WHERE id = ?';
-    params.push(id);
-    db.query(sql, params, (err) => {
+
+    // Step 1: Fetch existing cheese details to get the current image path
+    const fetchCheeseSql = 'SELECT image_path FROM CheeseInfo WHERE id = ?';
+    db.query(fetchCheeseSql, [id], (err, results) => {
         if (err) {
-            res.status(500).send('Error updating cheese');
-            throw err;
+            res.status(500).send('Error fetching cheese details');
+            return;
         }
-        res.status(200).send('Cheese updated successfully');
+
+        if (results.length === 0) {
+            res.status(404).send('Cheese not found');
+            return;
+        }
+
+        const oldImagePath = results[0].image_path;
+        let newImagePath = oldImagePath;
+
+        // Step 2: Update the cheese details
+        const updateParams = [
+            name, region, type, milk_type, aging_period, flavor_profile, texture,
+            serving_temperature, wine_pairing, bread_pairing, fruit_pairing
+        ];
+        let updateSql = `
+            UPDATE CheeseInfo 
+            SET name = ?, region = ?, type = ?, milk_type = ?, aging_period = ?, 
+                flavor_profile = ?, texture = ?, serving_temperature = ?, wine_pairing = ?, 
+                bread_pairing = ?, fruit_pairing = ?
+        `;
+
+        // Step 3: Handle new image upload if it exists
+        if (req.file) {
+            newImagePath = `/uploads/${req.file.filename}`;
+            updateSql += ', image_path = ?';
+            updateParams.push(newImagePath);
+        }
+
+        updateSql += ' WHERE id = ?';
+        updateParams.push(id);
+
+        // Execute update query
+        db.query(updateSql, updateParams, (updateErr) => {
+            if (updateErr) {
+                res.status(500).send('Error updating cheese');
+                return;
+            }
+
+            // Step 4: Delete old image if a new one was uploaded
+            if (req.file && oldImagePath && oldImagePath !== newImagePath) {
+                const absoluteOldImagePath = path.join(__dirname, oldImagePath);
+                fs.unlink(absoluteOldImagePath, (unlinkErr) => {
+                    if (unlinkErr) {
+                        console.error('Error deleting old image:', unlinkErr);
+                        // Log the error, but do not block the response
+                    }
+                });
+            }
+
+            res.status(200).send('Cheese updated successfully');
+        });
     });
 });
 
 // Delete a cheese
 app.delete('/api/cheeses/:id', authMiddleware, adminMiddleware, (req, res) => {
     const { id } = req.params;
-    const sql = 'DELETE FROM CheeseInfo WHERE id = ?';
-    db.query(sql, [id], (err) => {
+
+    // Step 1: Fetch the cheese to get the image path
+    const fetchCheeseSql = 'SELECT image_path FROM CheeseInfo WHERE id = ?';
+    db.query(fetchCheeseSql, [id], (err, results) => {
         if (err) {
-            res.status(500).send('Error deleting cheese');
-            throw err;
+            res.status(500).send('Error fetching cheese details');
+            return;
         }
-        res.send('Cheese deleted successfully');
+
+        if (results.length === 0) {
+            res.status(404).send('Cheese not found');
+            return;
+        }
+
+        const imagePath = results[0].image_path;
+
+        // Step 2: Delete the cheese from the database
+        const deleteCheeseSql = 'DELETE FROM CheeseInfo WHERE id = ?';
+        db.query(deleteCheeseSql, [id], (deleteErr) => {
+            if (deleteErr) {
+                res.status(500).send('Error deleting cheese');
+                return;
+            }
+
+            // Step 3: Delete the associated file from the server
+            if (imagePath) {
+                const absolutePath = path.join(__dirname, imagePath);
+                fs.unlink(absolutePath, (unlinkErr) => {
+                    if (unlinkErr) {
+                        console.error('Error deleting file:', unlinkErr);
+                        // Log the error, but do not block the response
+                    }
+                });
+            }
+
+            res.send('Cheese deleted successfully');
+        });
     });
 });
 

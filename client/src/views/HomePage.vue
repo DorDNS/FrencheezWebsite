@@ -120,6 +120,7 @@ export default {
   font-weight: bold;
   text-decoration: none;
   transition: transform 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Light shadow to the text */
 }
 
 .cta-button:hover {
