@@ -63,7 +63,6 @@ export default {
   font-family: "Rubik", sans-serif;
 }
 
-/* Conteneur blanc */
 .white-background {
   background-color: white;
   padding: 30px;

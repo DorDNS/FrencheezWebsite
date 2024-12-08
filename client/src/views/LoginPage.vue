@@ -77,7 +77,7 @@ export default {
   color: #333;
   font-weight: bold;
   margin-bottom: 30px;
-  font-family: 'Rubik', sans-serif; /* Ensures font is Rubik */
+  font-family: 'Rubik', sans-serif; 
 }
 
 .input-group {
@@ -94,7 +94,7 @@ export default {
 }
 
 .input-group input {
-  width: 90%; /* Adjusted width to prevent overflow */
+  width: 90%; 
   padding: 12px;
   font-size: 1rem;
   border: none;
@@ -107,7 +107,7 @@ export default {
   color: #333;
   font-size: 1.2rem;
   padding: 12px;
-  width: 90%; /* Reduced width to avoid overflow */
+  width: 90%; 
   border: none;
   border-radius: 20px;
   font-family: 'Rubik', sans-serif;

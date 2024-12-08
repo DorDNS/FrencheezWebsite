@@ -76,7 +76,7 @@ margin: 20px auto;
 padding: 20px;
 border: 1px solid #E0E0E0;
 border-radius: 8px;
-background-color: #FFFFFF; /* Set to white background */
+background-color: #FFFFFF; 
 font-family: 'Rubik', sans-serif;
 }
 
@@ -114,7 +114,7 @@ border-radius: 4px;
 .section-content {
 padding: 15px;
 border: 1px solid #E0E0E0;
-border-radius: 0; /* No rounded corners */
+border-radius: 0; 
 }
 
 .section-content ul {
@@ -126,7 +126,7 @@ padding-left: 20px;
 .section-content li {
 font-size: 1rem;
 color: #333;
-margin-bottom: 8px; /* Increased space between bullet points */
+margin-bottom: 8px; 
 }
 
 .back-to-hall-of-fame {
@@ -152,7 +152,7 @@ margin-bottom: 8px; /* Increased space between bullet points */
 /* Add media query for mobile view */
 @media (max-width: 768px) {
 .cheese-info-card {
-  margin: 20px 15px; /* Adds space between the card and screen edge on mobile */
+  margin: 20px 15px;
 }
 }
 </style>

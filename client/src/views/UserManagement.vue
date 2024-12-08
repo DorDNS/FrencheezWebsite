@@ -171,7 +171,6 @@ export default {
   font-family: 'Rubik', sans-serif;
 }
 
-/* Conteneur blanc */
 .white-background {
   background-color: white;
   padding: 30px;
@@ -272,6 +271,6 @@ export default {
 .form-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Espace entre les boutons */
+  gap: 10px; 
 }
 </style>

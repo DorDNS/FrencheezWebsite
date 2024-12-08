@@ -248,12 +248,12 @@ h1 {
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer; 
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for transform and box-shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
 .cheese-card:hover {
-  transform: translateY(-10px); /* Slightly lift the card on hover */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+  transform: translateY(-10px); 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
 }
 
 .cheese-image {
@@ -288,12 +288,12 @@ h1 {
   font-size: 1.5rem;
   color: #d9d9d9;
   cursor: pointer;
-  transition: color 0.3s ease, transform 0.2s ease; /* Add transition for color and transform */
+  transition: color 0.3s ease, transform 0.2s ease; 
 }
 
 .favorite-icon:hover {
   color: #ffdd57;
-  transform: scale(1.2); /* Slightly enlarge the icon on hover */
+  transform: scale(1.2); 
 }
 
 .title-container {

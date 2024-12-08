@@ -106,7 +106,7 @@ border: 1px solid #E0E0E0;
 border-radius: 8px;
 background-color: #FFFFFF;
 font-family: "Rubik", sans-serif;
-box-sizing: border-box; /* Ensure padding is included in width */
+box-sizing: border-box;
 }
 
 .form-group {
@@ -125,7 +125,7 @@ width: 100%;
 padding: 10px;
 border: 1px solid #CCC;
 border-radius: 4px;
-box-sizing: border-box; /* Prevent overflow due to padding */
+box-sizing: border-box; 
 }
 
 .save-button {

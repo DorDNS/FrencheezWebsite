@@ -2,7 +2,7 @@
   <div id="app">
     <AppHeader />
     <div class="content">
-      <router-view /> <!-- This is where the page content will be injected -->
+      <router-view /> 
     </div>
     <AppFooter />
   </div>

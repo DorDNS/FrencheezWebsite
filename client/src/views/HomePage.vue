@@ -61,7 +61,6 @@ export default {
 </script>
 
 <style scoped>
-/* Import Rubik Font */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
 
 /* General Styling */
@@ -90,7 +89,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px); /* Blur effect */
+  backdrop-filter: blur(5px); 
   z-index: 1;
 }
 
@@ -120,7 +119,7 @@ export default {
   font-weight: bold;
   text-decoration: none;
   transition: transform 0.3s ease;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Light shadow to the text */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); 
 }
 
 .cta-button:hover {
@@ -129,19 +128,19 @@ export default {
 
 .cheese-style {
   background: url('../../public/images/cheese-background.jpg') center/cover;
-  background-color: #ffcc00; /* Fallback color */
+  background-color: #ffcc00; 
   color: #333;
-  padding: 15px 30px; /* Maintain button size */
+  padding: 15px 30px; 
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-size: 1.5rem; /* Keep base font size for consistency */
+  font-size: 1.5rem; 
   border: 2px solid #e6b800;
-  line-height: 1.5; /* Increase text height without affecting button size */
+  line-height: 1.5; 
 }
 
 
 .cheese-style:hover {
-  background-color: #ffd633; /* Slightly lighter shade on hover */
+  background-color: #ffd633; 
   border-color: #ffc300;
 }
 
@@ -176,7 +175,7 @@ export default {
 }
 
 .cheese-description .description-text h2 {
-  font-size: 2rem; /* Matches the size of "What Frencheez Offers" */
+  font-size: 2rem; 
   margin: 15px;
 }
 
@@ -189,20 +188,20 @@ export default {
 /* Responsive Design for Cheese Description */
 @media (max-width: 768px) {
   .cheese-description .description-content {
-    flex-direction: column; /* Stack text and image vertically */
+    flex-direction: column; 
     align-items: center;
   }
 
   .cheese-description .cheese-image {
-    order: 2; /* Ensure the image appears after the text */
-    width: 100%; /* Make image responsive */
-    max-width: 300px; /* Optional max width for smaller screens */
+    order: 2; 
+    width: 100%; 
+    max-width: 300px; 
   }
 
   .cheese-description .description-text {
-    order: 1; /* Text comes first */
+    order: 1; 
     text-align: center;
-    margin-bottom: 20px; /* Add spacing between text and image */
+    margin-bottom: 20px; 
   }
 }
 

@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-// Protected route: Get all cheeses (requires authentication)
+// Get all cheeses
 app.get('/api/cheeses', authMiddleware, (req, res) => {
     const sql = 'SELECT * FROM CheeseInfo';
     db.query(sql, (err, results) => {
@@ -69,7 +69,7 @@ app.get('/api/cheeses', authMiddleware, (req, res) => {
     });
 });
 
-// Get a single cheese by ID (requires authentication)
+// Get a single cheese by ID
 app.get('/api/cheeses/:id', authMiddleware, (req, res) => {
     const cheeseId = req.params.id;
     const sql = 'SELECT * FROM CheeseInfo WHERE id = ?';

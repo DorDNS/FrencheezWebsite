@@ -187,14 +187,12 @@ export default {
 </script>
 
 <style scoped>
-/* Général */
 .edit-quizzes-page {
   max-width: 900px;
   margin: 20px auto;
   font-family: "Rubik", sans-serif;
 }
 
-/* Conteneur blanc */
 .white-background {
   background-color: white;
   padding: 30px;
@@ -222,7 +220,6 @@ export default {
   transform: scale(1.05);
 }
 
-/* Cartes de sélection */
 .admin-cards {
   display: flex;
   justify-content: center;
@@ -277,7 +274,6 @@ export default {
   }
 }
 
-/* Section d'édition */
 .question-box {
   margin: 20px auto;
   padding: 25px 30px;
@@ -349,7 +345,6 @@ export default {
   transform: scale(1.05);
 }
 
-/* Boutons */
 button {
   font-family: "Rubik", sans-serif;
   display: inline-block;

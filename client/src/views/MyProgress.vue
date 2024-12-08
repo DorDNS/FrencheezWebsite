@@ -1,75 +1,75 @@
 <template>
   <div class="progress-page">
-  <div class="title-container">
-    <h1>My Progress</h1>
-  </div>
-  <div class="my-progress">
-    <div class="profile-section">
-      <div class="circular-progress">
-        <svg viewBox="0 0 36 36" class="circular-chart green">
-          <path class="circle-bg"
-                d="M18 2.0845
-                  a 15.9155 15.9155 0 0 1 0 31.831
-                  a 15.9155 15.9155 0 0 1 0 -31.831" />
-          <path class="circle"
-                :stroke-dasharray="`${progress}, 100`"
-                d="M18 2.0845
-                  a 15.9155 15.9155 0 0 1 0 31.831
-                  a 15.9155 15.9155 0 0 1 0 -31.831" />
-        </svg>
-      </div>
-      <div class="user-details">
-        <h2 class="full-name">{{ userName }}</h2>
-        <p class="username">@{{ username }}</p>
-        <p class="description">{{ description }}</p>
-      </div>
+    <div class="title-container">
+      <h1>My Progress</h1>
     </div>
-    <div class="level-section">
-      <div class="level-left">
-        <span class="level-label">LEVEL</span>
-        <span class="level-value">{{ userLevel }}</span>
-      </div>
-      <div class="level-right">
-        <span class="level-cheese">{{ cheeseForLevel }}</span>
-      </div>
-    </div>
-
-
-    <div class="favorites-section">
-      <h2>My Favorite Cheeses</h2>
-      <div class="favorites-list">
-        <div
-          v-for="cheese in favoriteCheeses"
-          :key="cheese.cheese_id"
-          class="favorite-cheese-item"
-          @click="goToCheeseInfo(cheese.cheese_id)"
-        >
-          <img :src="`http://localhost:3000${cheese.image_path}`" alt="Cheese Image" />
-          <span>{{ cheese.name }}</span>
+    <div class="my-progress">
+      <div class="profile-section">
+        <div class="circular-progress">
+          <svg viewBox="0 0 36 36" class="circular-chart green">
+            <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="circle"
+                  :stroke-dasharray="`${progress}, 100`"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+        </div>
+        <div class="user-details">
+          <h2 class="full-name">{{ userName }}</h2>
+          <p class="username">@{{ username }}</p>
+          <p class="description">{{ description }}</p>
         </div>
       </div>
-    </div>
 
-    <div class="knowledge-section">
-      <h2>My Knowledge</h2>
-      <div class="badge-list">
-        <div
-          v-for="quiz in quizzes"
-          :key="quiz.id"
-          class="badge-item"
-          :class="{ unlocked: userScores[quiz.id] === quiz.maxScore }"
-        >
-          <img :src="quiz.icon" :alt="`${quiz.name} Badge`" />
-          <span>{{ quiz.name }}</span>
+      <div class="level-section">
+        <div class="level-left">
+          <span class="level-label">LEVEL</span>
+          <span class="level-value">{{ computedLevel }}</span>
+        </div>
+        <div class="level-right">
+          <span class="level-cheese">{{ cheeseForLevel }}</span>
         </div>
       </div>
-    </div>
 
-    <button v-if="isAdmin" @click="goToAdminPage" class="manage-button">Manage Website</button>
-    <button @click="goToEditProfile" class="edit-profile-button">Edit Profile</button>
-    <button @click="logout" class="logout-button">Log Out</button>
+      <div class="favorites-section">
+        <h2>My Favorite Cheeses</h2>
+        <div class="favorites-list">
+          <div
+            v-for="cheese in favoriteCheeses"
+            :key="cheese.cheese_id"
+            class="favorite-cheese-item"
+            @click="goToCheeseInfo(cheese.cheese_id)"
+          >
+            <img :src="`http://localhost:3000${cheese.image_path}`" alt="Cheese Image" />
+            <span>{{ cheese.name }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="knowledge-section">
+        <h2>My Knowledge</h2>
+        <div class="badge-list">
+          <div
+            v-for="quiz in quizzes"
+            :key="quiz.id"
+            class="badge-item"
+            :class="{ unlocked: userScores[quiz.id] === quiz.maxScore }"
+          >
+            <img :src="quiz.icon" :alt="`${quiz.name} Badge`" />
+            <span>{{ quiz.name }}</span>
+          </div>
+        </div>
+      </div>
+
+      <button v-if="isAdmin" @click="goToAdminPage" class="manage-button">Manage Website</button>
+      <button @click="goToEditProfile" class="edit-profile-button">Edit Profile</button>
+      <button @click="logout" class="logout-button">Log Out</button>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -87,16 +87,22 @@ export default {
         { id: "pairing-cheese", name: "Pairing Cheese", icon: "/images/badge-pairing.png", maxScore: 10 },
       ],
       isAdmin: false,
-      userLevel: 1,
       userName: "",
       username: "",
       description: "",
+      progress: 0, 
     };
   },
   computed: {
     cheeseForLevel() {
       const cheeseNames = ["EMMENTAL", "COMTÉ", "CAMEMBERT", "BLEU"];
-      return cheeseNames[this.userLevel - 1] || "Emmental";
+      return cheeseNames[this.computedLevel - 1] || "Emmental";
+    },
+    computedLevel() {
+      if (this.progress < 25) return 1;
+      if (this.progress < 50) return 2;
+      if (this.progress < 75) return 3;
+      return 4;
     },
   },
   methods: {
@@ -126,9 +132,8 @@ export default {
         this.userName = response.data.full_name || "Unknown User";
         this.username = response.data.username || "unknown";
         this.description = response.data.description || "No description provided";
-        this.progressPercentage = response.data.progress_percentage || 0;
+        this.progress = response.data.progress_percentage || 0;
 
-        // Update progress bar
         this.updateProgressCircle();
       } catch (error) {
         console.error("Error fetching user progress:", error);
@@ -136,34 +141,21 @@ export default {
     },
 
     updateProgressCircle() {
-      this.$nextTick(() => { // Ensure the DOM is updated
-      const circle = document.querySelector(".circle");
-      if (!circle) {
-        console.error("Circle element not found!");
-        return;
-      }
+      this.$nextTick(() => {
+        const circle = document.querySelector(".circle");
+        if (!circle) {
+          console.error("Circle element not found!");
+          return;
+        }
 
-      const radius = 15.9155; // Based on the SVG's path dimensions
-      const circumference = 2 * Math.PI * radius;
+        const radius = 15.9155; // Based on the SVG's path dimensions
+        const circumference = 2 * Math.PI * radius;
 
-      circle.style.strokeDasharray = `${circumference} ${circumference}`;
-      const offset = circumference - (this.progressPercentage / 100) * circumference;
-      circle.style.strokeDashoffset = offset;
-    });
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        const offset = circumference - (this.progress / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+      });
     },
-
-    calculateDasharray() {
-    const radius = 15.9155; // Based on SVG dimensions
-    const circumference = 2 * Math.PI * radius;
-
-    // Calculate progress offset
-    const progressOffset = (this.progressPercentage / 100) * circumference;
-
-    // Ensure a visible dot at 0%
-    const minOffset = 2; // Small visible dot size
-    return `${Math.max(progressOffset, minOffset)}, ${circumference}`;
-    },
-
     async fetchScores() {
       try {
         const quizDetails = await Promise.all(
@@ -201,12 +193,12 @@ export default {
   },
   async created() {
     await this.fetchFavorites();
-    await this.fetchScores();
     await this.fetchUserProgress();
+    await this.fetchScores();
   },
 };
-
 </script>
+
 
 
 <style scoped>
@@ -288,32 +280,32 @@ export default {
 .badge-list {
   display: flex;
   justify-content: center;
-  gap: 30px; /* Espacement entre les badges */
-  margin-top: 20px; /* Espacement supérieur */
+  gap: 30px; 
+  margin-top: 20px; 
   margin-bottom: 40px;
 }
 
 .badge-item {
-  text-align: center; /* Centre le texte sous l'icône */
+  text-align: center;
 }
 
 .badge-item img {
-  width: 80px; /* Augmente la largeur de l'image */
-  height: 80px; /* Augmente la hauteur de l'image */
-  opacity: 0.5; /* Icône grisée par défaut */
+  width: 80px; 
+  height: 80px; 
+  opacity: 0.5; 
   transition: opacity 0.3s ease;
 }
 
 .badge-item.unlocked img {
-  opacity: 1; /* Icône entièrement visible si débloquée */
+  opacity: 1; 
 }
 
 .badge-item span {
-  display: block; /* Le titre passe sur une nouvelle ligne */
-  margin-top: 10px; /* Espacement entre l'icône et le texte */
-  font-size: 1.2rem; /* Taille du texte */
-  font-weight: bold; /* Texte en gras */
-  color: #333; /* Couleur du texte */
+  display: block; 
+  margin-top: 10px; 
+  font-size: 1.2rem; 
+  font-weight: bold; 
+  color: #333;
   font-family: "Rubik", sans-serif;
 }
 
@@ -362,8 +354,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 200px; /* Limit height for scrolling */
-  overflow-y: auto; /* Enable vertical scroll */
+  max-height: 200px; 
+  overflow-y: auto; 
 }
 
 .favorite-cheese-item {
@@ -458,7 +450,7 @@ z-index: 0;
 
 .level-section {
   display: flex;
-  justify-content: space-between; /* Aligne les éléments aux extrémités */
+  justify-content: space-between; 
   align-items: center;
   margin: 20px 0;
   background-color: #f8e5c1;
@@ -498,15 +490,15 @@ z-index: 0;
 
 .profile-section {
   display: flex;
-  align-items: center; /* Vertically align progress chart and user details */
-  justify-content: center; /* Center the group horizontally */
-  gap: 20px; /* Space between the progress chart and user details */
-  height: auto; /* Remove the extra height */
-  padding: 20px 0; /* Add minimal padding for spacing above and below */
+  align-items: center; 
+  justify-content: center; 
+  gap: 20px; 
+  height: auto; 
+  padding: 20px 0; 
 }
 
 .circular-progress {
-  width: 200px; /* Adjust the size of the progress bar */
+  width: 200px; 
   height: 200px;
   position: relative;
 }

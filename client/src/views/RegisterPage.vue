@@ -106,7 +106,7 @@
   }
   
   .input-group input {
-    width: 90%; /* Adjusted width to prevent overflow */
+    width: 90%;
     padding: 12px;
     font-size: 1rem;
     border: none;
@@ -119,7 +119,7 @@
     color: #333;
     font-size: 1.2rem;
     padding: 12px;
-    width: 90%; /* Ensures button fits within the container */
+    width: 90%; 
     border: none;
     border-radius: 20px;
     font-family: 'Rubik', sans-serif;

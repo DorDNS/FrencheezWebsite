@@ -283,7 +283,7 @@
   
   .next-button {
   position: absolute;
-  bottom: 10px; /* Ajuste cette valeur pour baisser la flèche */
+  bottom: 10px; 
   right: 20px;
   width: 50px;
   height: 50px;
@@ -347,8 +347,8 @@
   font-family: 'Rubik', sans-serif;
   font-weight: 500;
   font-size: 3rem;
-  color: #575dce; /* Violet correspondant au style */
-  background-color: #f5f3e7; /* Fond clair */
+  color: #575dce; 
+  background-color: #f5f3e7; 
   padding: 0 15px;
   margin-left: 10%;
   z-index: 1;
@@ -367,8 +367,8 @@
   
   .back-to-quiz-selection {
       font-family: 'Rubik', sans-serif;
-      background-color: #f5f3e7; /* Fond clair */
-      color: #575dce; /* Violet correspondant au thème */
+      background-color: #f5f3e7; 
+      color: #575dce; 
       border: 2px solid #575dce;
       border-radius: 25px;
       padding: 10px 20px;
@@ -384,14 +384,14 @@
       transform: scale(1.05);
   }
   
-    /* Vos styles existants */
-      .loading-indicator {
+
+  .loading-indicator {
       font-size: 18px;
       font-weight: bold;
       color: #575dce;
-      }
+  }
   
-      .quiz-completed p {
+  .quiz-completed p {
     font-size: 18px;
     color: #333;
   }
