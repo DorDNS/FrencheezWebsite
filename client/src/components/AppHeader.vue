@@ -31,8 +31,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1200px; /* Center content within a max-width container */
-  margin: 0 auto; /* Center the header content */
+  max-width: 1200px;
+  margin: 0 auto; 
   width: 100%;
 }
 
@@ -40,19 +40,19 @@ export default {
   font-family: 'Leckerli One', cursive;
   font-size: 48px;
   color: #2c2c27;
-  text-decoration: none; /* Remove underline from the link */
-  transition: color 0.3s ease, transform 0.2s ease; /* Add transition for color and transform */
+  text-decoration: none; 
+  transition: color 0.3s ease, transform 0.2s ease; 
 }
 
 .logo:hover {
-  color: #575dce; /* Change color on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+  color: #575dce; 
+  transform: scale(1.05); 
 }
 
 .navigation {
   display: flex;
   gap: 30px;
-  min-width: 350px; /* Ensures enough space for navigation links */
+  min-width: 350px; 
 }
 
 .nav-link {
@@ -61,17 +61,17 @@ export default {
   font-weight: 500;
   color: #382877;
   text-decoration: none;
-  white-space: nowrap; /* Prevents any of the nav items from wrapping */
-  transition: color 0.3s ease, transform 0.2s ease; /* Add transition for color and transform */
+  white-space: nowrap; 
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .nav-link:hover {
-  color: hwb(259 29% 45%); /* Change color on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+  color: hwb(259 29% 45%);
+  transform: scale(1.05); 
 }
 
 .nav-link:active {
-  transform: scale(0.95); /* Slightly shrink on click */
+  transform: scale(0.95); 
 }
 
 .progress-button {
@@ -85,17 +85,17 @@ export default {
   font-size: 28px;
   font-weight: 500;
   text-decoration: none;
-  white-space: nowrap; /* Prevents the text from wrapping to two lines */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Add transition for background-color and transform */
+  white-space: nowrap; 
+  transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 
 .progress-button:hover {
-  background-color: #f5d78e; /* Change background color on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+  background-color: #f5d78e; 
+  transform: scale(1.05); 
 }
 
 .progress-button:active {
-  transform: scale(0.95); /* Slightly shrink on click */
+  transform: scale(0.95); 
 }
 
 .progress-button img {
@@ -105,17 +105,17 @@ export default {
 }
 
 /* Media query for mobile view */
-@media (max-width: 900px) { /* Adjusted breakpoint to prevent wrapping issue */
+@media (max-width: 900px) { 
   .header-content {
     flex-direction: column;
-    align-items: center; /* Center-aligns elements in mobile view */
+    align-items: center; 
   }
 
   .navigation {
     flex-direction: row;
     gap: 30px;
     margin: 10px 0;
-    justify-content: center; /* Center-aligns the navigation links */
+    justify-content: center; 
   }
 
   .progress-button {

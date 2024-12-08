@@ -3,30 +3,15 @@
     <div class="white-background">
       <h1>Admin Panel</h1>
       <div class="admin-cards">
-        <!-- Carte : Gestion des utilisateurs -->
         <div
           v-for="(card, index) in adminCards"
           :key="index"
           class="admin-card"
           @click="navigateTo(card.route)"
         >
-          <img :src="card.icon" alt="Card Icon" />
+          <img :src="card.icon" :alt="card.title + ' Icon'" />
           <h3>{{ card.title }}</h3>
           <p>{{ card.description }}</p>
-        </div>
-
-        <!-- Carte : Gestion des fromages -->
-        <div class="admin-card" @click="$router.push({ name: 'CheesesList' })">
-          <img src="/images/cheese-icon.png" alt="Cheese Icon" />
-          <h3>Manage Cheeses</h3>
-          <p>Manage the list of cheeses.</p>
-        </div>
-
-        <!-- Nouvelle carte : Gestion des quiz -->
-        <div class="admin-card" @click="$router.push({ name: 'EditQuizzes' })">
-          <img src="/images/quiz-icon.png" alt="Quiz Icon" />
-          <h3>Manage Quizzes</h3>
-          <p>Add, edit, or delete quiz questions.</p>
         </div>
       </div>
     </div>
@@ -44,6 +29,18 @@ export default {
           description: "Manage users and their permissions.",
           route: "/user-management",
           icon: "/images/user-management-icon.png",
+        },
+        {
+          title: "Manage Cheeses",
+          description: "Manage the list of cheeses.",
+          route: { name: "CheesesList" },
+          icon: "/images/cheese-icon.png",
+        },
+        {
+          title: "Manage Quizzes",
+          description: "Add, edit, or delete quiz questions.",
+          route: { name: "EditQuizzes" },
+          icon: "/images/quiz-icon.png",
         },
       ],
     };
@@ -87,7 +84,6 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  flex-grow: 1;
 }
 
 .admin-card:hover {
@@ -105,7 +101,6 @@ export default {
   font-weight: bold;
   margin-bottom: 10px;
   color: black;
-  text-transform: capitalize;
 }
 
 .admin-card p {
