@@ -27,7 +27,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: HomePage,
-    meta: { requiresAuth: true }, // Restrict access
   },
   {
     path: '/hall-of-fame',
@@ -44,7 +43,8 @@ const routes = [
   {
     path: '/admin/cheeses',
     name: 'CheesesList',
-    component: CheesesList
+    component: CheesesList,
+    meta: { requiresAuth: true, requiresAdmin: true }, // Restrict access to admins
   },
   {
     path: '/user-management',
@@ -80,6 +80,7 @@ const routes = [
     path: '/edit-profile',
     name: 'EditProfile',
     component: EditProfile,
+    meta: { requiresAuth: true }
   },
 ];
 
